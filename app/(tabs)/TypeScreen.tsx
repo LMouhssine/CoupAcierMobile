@@ -3,17 +3,6 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'reac
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
-  const navigation = useNavigation();
-
-  const handleContinueAsGuest = () => {
-    // Naviguer vers AnotherPage.tsx
-    navigation.navigate('AnotherPage');
-  };
-
-  const login = () => {
-    // Naviguer vers AnotherPage.tsx
-    navigation.navigate('TypeScreen');
-  };
 
   return (
     <View style={styles.container}>
@@ -21,14 +10,14 @@ const App = () => {
       <View style={styles.logoContainer}>
         <Image source={require('@/assets/images/CoupAcierApp.png')} style={styles.logoImage} />
       </View>
-      <TouchableOpacity style={styles.button} onPress={login}>
-        <Text style={styles.buttonText}>Je m'inscris</Text>
+      <TouchableOpacity>
+        <Text style={styles.loginText}>Inscription</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Je me connecte</Text>
+        <Text style={styles.buttonText}>Professionnel</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleContinueAsGuest}>
-        <Text style={styles.guestText}>Continuer en tant qu'invité</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Particulier</Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,10 +51,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  guestText: {
-    marginTop: 20,
+  loginText: {
+    marginTop: 10,
+    marginBottom: 40,
     color: 'black',
-    fontSize: 16,
+    fontSize: 35,
+    fontWeight: 600,
+    fontStyle: 'italic',
   },
 });
 
