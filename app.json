@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.yourappname"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.yourappname"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +33,13 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["cjs"]
     }
   }
 }
