@@ -56,11 +56,11 @@ const ProductPage = () => {
         manipuler.
       </Text>
       <View style={styles.paymentMethods}>
-        <Icon name="cc-visa" type="font-awesome" size={32} color="#fff" />
-        <Icon name="cc-mastercard" type="font-awesome" size={32} color="#fff" />
-        <Icon name="cc-amex" type="font-awesome" size={32} color="#fff" />
-        <Icon name="paypal" type="font-awesome" size={32} color="#fff" />
-        <Icon name="apple-pay" type="font-awesome" size={32} color="#fff" />
+        <Icon name="cc-visa" type="font-awesome" size={32} color="#000" />
+        <Icon name="cc-mastercard" type="font-awesome" size={32} color="#000" />
+        <Icon name="cc-amex" type="font-awesome" size={32} color="#000" />
+        <Icon name="paypal" type="font-awesome" size={32} color="#000" />
+        <Icon name="apple" type="font-awesome" size={32} color="#000" />
       </View>
       <Button title="Acheter" buttonStyle={styles.buyButton} />
     </ScrollView>
@@ -78,9 +78,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
-    backgroundColor: 'blue',
     paddingHorizontal: 10,
-    marginTop: 20,
+    marginTop: 50,
   },
   headerIcons: {
     flexDirection: 'row',
@@ -91,6 +90,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 8,
     marginBottom: 16,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -146,7 +146,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 16,
-    backgroundColor: 'blue',
+    backgroundColor: '#FFF',
+    padding: 8,
+    borderRadius: 8,
   },
   buyButton: {
     backgroundColor: '#FFD700',

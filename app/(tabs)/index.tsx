@@ -6,12 +6,10 @@ const App = () => {
   const navigation = useNavigation();
 
   const handleContinueAsGuest = () => {
-    // Naviguer vers AnotherPage.tsx
     navigation.navigate('AnotherPage');
   };
 
   const login = () => {
-    // Naviguer vers AnotherPage.tsx
     navigation.navigate('TypeScreen');
   };
 

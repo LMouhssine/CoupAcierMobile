@@ -52,12 +52,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   loginText: {
-    marginTop: 10,
-    marginBottom: 40,
+    marginBottom: 20,
     color: 'black',
-    fontSize: 35,
-    fontWeight: 600,
-    fontStyle: 'italic',
+    fontSize: 30,
   },
 });
 
