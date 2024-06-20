@@ -1,28 +1,39 @@
-const db = require("../config/db");
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
-// Récupérer tous les clients
-const getClients = (req, res) => {
-  db.query("SELECT * FROM client", (err, results) => {
-    if (err) {
-      return res.status(500).json({ message: err.message });
+exports.registerUser = async (req, res) => {
+  try {
+    const { companyName, siretNumber, companyAddress, addressComplement, email, phoneNumber, password } = req.body;
+
+    // Vérifiez que toutes les données nécessaires sont présentes
+    if (!companyName || !siretNumber || !companyAddress || !email || !phoneNumber || !password) {
+      return res.status(400).json({ error: 'Tous les champs sont requis' });
     }
-    res.json(results);
-  });
-};
 
-// Créer un nouveau client
-const createClient = (req, res) => {
-  const { prenomClient, nomClient, motDePasse, codeGenere, siret, telephone, statutCompte, profilClient, email } = req.body;
-  const query = "INSERT INTO client (prenomClient, nomClient, motDePasse, codeGenere, siret, telephone, statutCompte, profilClient, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  db.query(query, [prenomClient, nomClient, motDePasse, codeGenere, siret, telephone, statutCompte, profilClient, email], (err, results) => {
-    if (err) {
-      return res.status(500).json({ message: err.message });
-    }
-    res.status(201).json({ idClient: results.insertId, prenomClient, nomClient, email });
-  });
-};
+    // Hasher le mot de passe avant de l'enregistrer dans la base de données
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-module.exports = {
-  getClients,
-  createClient,
+    // Créer un objet userData avec les données de l'utilisateur
+    const userData = {
+      companyName,
+      siretNumber,
+      companyAddress,
+      addressComplement,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+    };
+
+    // Insérer les données de l'utilisateur dans la base de données
+    User.create(userData, (err, results) => {
+      if (err) {
+        console.error('Error inserting user:', err);
+        return res.status(500).json({ error: 'Erreur de la base de données' });
+      }
+      res.status(201).json({ message: 'Utilisateur enregistré avec succès', userId: results.insertId });
+    });
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.status(500).json({ error: 'Erreur du serveur' });
+  }
 };

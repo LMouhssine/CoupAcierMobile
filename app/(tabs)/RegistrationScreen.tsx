@@ -1,6 +1,5 @@
-// src/RegistrationScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 
 const RegistrationScreen = () => {
   const [form, setForm] = useState({
@@ -18,9 +17,33 @@ const RegistrationScreen = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic
-    console.log(form);
+  const handleSubmit = async () => {
+    if (form.password !== form.confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', 'Registration successful');
+        console.log('User registered:', data);
+      } else {
+        Alert.alert('Error', data.error || 'Registration failed');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred. Please try again.');
+      console.error('Error during registration:', error);
+    }
   };
 
   return (
@@ -106,9 +129,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'black',
     marginTop: 25,
-    // paddingVertical: 15,
     padding: 15,
-    // paddingHorizontal: 40,
     borderRadius: 25,
     marginVertical: 10,
     width: '100%',
