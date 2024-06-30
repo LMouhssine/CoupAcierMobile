@@ -69,6 +69,7 @@ const ProductPage = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 60,
     flexGrow: 1,
     padding: 16,
     backgroundColor: '#000',
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     paddingHorizontal: 10,
-    marginTop: 50,
+    marginTop: 20,
   },
   headerIcons: {
     flexDirection: 'row',

@@ -14,35 +14,16 @@ export default function TabLayout() {
         headerShown: false,
       }}
     >
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-          // Masquer la barre d'onglets pour l'écran d'accueil
-          tabBarStyle: { display: 'none' },
-        }}
-      /> */}
-            <Tabs.Screen
+      <Tabs.Screen
         name="TypeScreen"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-          // Masquer la barre d'onglets pour l'écran d'accueil
-          tabBarStyle: { display: 'none' },
+          tabBarButton: () => null,
         }}
       />
       <Tabs.Screen
-        name="AnotherPage"
+        name="index"
         options={{
-          title: 'Another Page',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home'} color={color} />
-          ),
+          tabBarStyle: { display: 'none' },
         }}
       />
       {/* Ajouter d'autres écrans ici */}

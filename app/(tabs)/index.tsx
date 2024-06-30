@@ -6,7 +6,7 @@ const App = () => {
   const navigation = useNavigation();
 
   const handleContinueAsGuest = () => {
-    navigation.navigate('AnotherPage');
+    navigation.navigate('HomeScreen');
   };
 
   const login = () => {
