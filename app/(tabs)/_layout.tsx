@@ -25,6 +25,17 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }}
       /> */}
+            <Tabs.Screen
+        name="TypeScreen"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          ),
+          // Masquer la barre d'onglets pour l'écran d'accueil
+          tabBarStyle: { display: 'none' },
+        }}
+      />
       <Tabs.Screen
         name="AnotherPage"
         options={{
