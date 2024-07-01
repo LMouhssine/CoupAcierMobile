@@ -15,9 +15,39 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="TypeScreen"
+        name="HomeScreen"
         options={{
-          tabBarButton: () => null,
+          tabBarLabel: 'Accueil',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="OrdersScreen"
+        options={{
+          tabBarLabel: 'Orders',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="list" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="CartScreen"
+        options={{
+          tabBarLabel: 'Cart',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="cart" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="FavoritesScreen"
+        options={{
+          tabBarLabel: 'Favorites',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="heart" color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -26,7 +56,12 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }}
       />
-      {/* Ajouter d'autres écrans ici */}
+      <Tabs.Screen
+        name="TypeScreen"
+        options={{
+          tabBarStyle: { display: 'none' },
+        }}
+      />
     </Tabs>
   );
 }

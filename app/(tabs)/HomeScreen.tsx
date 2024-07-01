@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 const data = [
-  { id: '1', title: 'FERS PLATS', image: require('../../assets/images/CoupAcierApp.png') },
+  { id: '1', title: 'FERS PLATS', image: require('../../assets/images/barres_carrees.gif') },
   { id: '2', title: 'CORNIÈRES À AILES ÉGALES', image: require('../../assets/images/CoupAcierApp.png') },
   { id: '3', title: 'CORNIÈRES À AILES INÉGALES', image: require('../../assets/images/CoupAcierApp.png') },
   { id: '4', title: 'FERS EN T', image: require('../../assets/images/CoupAcierApp.png') },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 30,
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Keyboard } from 'react-native';
 
 const RegistrationScreen = () => {
   const [form, setForm] = useState({
@@ -18,6 +18,13 @@ const RegistrationScreen = () => {
   };
 
   const handleSubmit = async () => {
+    Keyboard.dismiss(); // Dismiss keyboard on submit
+
+    if (!form.companyName || !form.siretNumber || !form.companyAddress || !form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
     if (form.password !== form.confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
@@ -37,6 +44,7 @@ const RegistrationScreen = () => {
       if (response.ok) {
         Alert.alert('Success', 'Registration successful');
         console.log('User registered:', data);
+        // Optionally navigate to the next screen after successful registration
       } else {
         Alert.alert('Error', data.error || 'Registration failed');
       }
@@ -47,7 +55,7 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.title}>Inscription Professionnel</Text>
       <TextInput
         style={styles.input}
@@ -60,6 +68,7 @@ const RegistrationScreen = () => {
         placeholder="Numéro de SIRET"
         value={form.siretNumber}
         onChangeText={(value) => handleChange('siretNumber', value)}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
@@ -78,12 +87,15 @@ const RegistrationScreen = () => {
         placeholder="E-mail"
         value={form.email}
         onChangeText={(value) => handleChange('email', value)}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Numéro de téléphone"
         value={form.phoneNumber}
         onChangeText={(value) => handleChange('phoneNumber', value)}
+        keyboardType="phone-pad"
       />
       <TextInput
         style={styles.input}
