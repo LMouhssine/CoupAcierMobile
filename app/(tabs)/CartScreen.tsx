@@ -16,6 +16,7 @@ const initialCartItems: CartItem[] = [
   { id: '4', image: 'https://via.placeholder.com/50', name: 'FERS EN T', price: 336.00, quantity: 5 },
   { id: '5', image: 'https://via.placeholder.com/50', name: 'FERS EN T', price: 293.65, quantity: 4 },
   { id: '6', image: 'https://via.placeholder.com/50', name: 'FERS EN T', price: 230.00, quantity: 1 },
+  { id: '7', image: 'https://via.placeholder.com/50', name: 'FERS EN T', price: 250.00, quantity: 1 },
 ];
 
 const CartScreen: React.FC = () => {
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+    color: 'yellow',
   },
   quantity: {
     marginHorizontal: 10,
