@@ -9,7 +9,9 @@ const HomeScreen: React.FC = () => {
     <Container>
       <Header>
         <SearchBar placeholder="Search Product" />
-        <NotificationIcon source={require('../../assets/images/CoupAcierApp.png')} />
+        <UserIconContainer>
+          <UserIcon source={require('../../assets/images/icons8-user-32.png')} />
+        </UserIconContainer>
       </Header>
       <ScrollView>
         <Banner>
@@ -20,24 +22,58 @@ const HomeScreen: React.FC = () => {
             </BannerText>
           </BannerImage>
         </Banner>
-        <CategoriesTitle>Categories</CategoriesTitle>
-        <CategoryBar horizontal>
-          <CategoryButton selected>Armchair</CategoryButton>
-          <CategoryButton>Mobile</CategoryButton>
-          <CategoryButton>Electricity</CategoryButton>
-          <CategoryButton>Shoes</CategoryButton>
-        </CategoryBar>
-        <ProductList>
-          <Product>
-            <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
-            <ProductName>POUTRELLES HE</ProductName>
-          </Product>
-          <Product>
-            <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-            <ProductName>BARRES RONDES</ProductName>
-          </Product>
-          
-        </ProductList>
+        <ProductListContainer>
+          <ProductList>
+            <Product>
+              <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>POUTRELLES HE</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>POUTRELLES I</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>BARRES RONDES</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>BARRES RONDES</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>NOUVEAU PRODUIT</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>NOUVEAU PRODUIT</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>NOUVEAU PRODUIT</ProductName>
+              </ProductNameContainer>
+            </Product>
+            <Product>
+              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
+              <ProductNameContainer>
+                <ProductName>NOUVEAU PRODUIT</ProductName>
+              </ProductNameContainer>
+            </Product>
+          </ProductList>
+        </ProductListContainer>
       </ScrollView>
     </Container>
   );
@@ -65,10 +101,19 @@ const SearchBar = styled.TextInput`
   padding-left: 10px;
 `;
 
-const NotificationIcon = styled.Image`
+const UserIconContainer = styled.View`
+  width: 34px;
+  height: 34px;
+  background-color: #FEE715;
+  border-radius: 17px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const UserIcon = styled.Image`
   width: 24px;
   height: 24px;
-  margin-left: 10px;
 `;
 
 const Banner = styled.View`
@@ -109,37 +154,32 @@ const HighlightedTagline = styled.Text`
   margin-right: 100px;
 `;
 
-const CategoriesTitle = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 10px 0;
-  padding: 0 10px;
-`;
-
-const CategoryBar = styled.ScrollView`
-  flex-direction: row;
-  padding: 0 10px;
-`;
-
-const CategoryButton = styled.Text<{ selected?: boolean }>`
-  background-color: ${({ selected }) => (selected ? '#4f46e5' : '#e5e7eb')};
-  color: ${({ selected }) => (selected ? '#fff' : '#000')};
-  padding: 10px 15px;
-  border-radius: 20px;
-  margin-right: 10px;
+const ProductListContainer = styled.View`
+  flex: 1;
+  padding: 10px;
+  align-items: center;
 `;
 
 const ProductList = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
-  padding: 10px;
+  justify-content: space-between;
 `;
 
 const Product = styled.View`
   width: 48%;
   margin-bottom: 20px;
   align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  shadow-color: #000;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.2;
+  shadow-radius: 4px;
+  elevation: 2;
+  justify-content: space-between;
 `;
 
 const ProductImage = styled.Image`
@@ -148,8 +188,22 @@ const ProductImage = styled.Image`
   margin-bottom: 10px;
 `;
 
+const ProductNameContainer = styled.View`
+  background-color: #FEE715;
+  width: 100%;
+  padding: 5px;
+  border-radius: 4px;
+  align-items: center;
+`;
+
 const ProductName = styled.Text`
   font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  max-width: 100%;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export default HomeScreen;
