@@ -1,16 +1,13 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon'; 
-import { Colors } from '@/constants/Colors'; 
-import { useColorScheme } from '@/hooks/useColorScheme'; 
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#6184FF',
+        tabBarInactiveTintColor: '#000',
         headerShown: false,
       }}
     >
@@ -60,6 +57,25 @@ export default function TabLayout() {
         name="TypeScreen"
         options={{
           tabBarStyle: { display: 'none' },
+        }}
+      />
+      {/* Masquer les autres écrans de la barre de navigation */}
+      <Tabs.Screen
+        name="ProductPage"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="Notifications"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="RegistrationScreenPro"
+        options={{
+          tabBarButton: () => null,
         }}
       />
     </Tabs>

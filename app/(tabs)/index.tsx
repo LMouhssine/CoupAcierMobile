@@ -1,33 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const navigation = useNavigation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleContinueAsGuest = () => {
+    setIsLoggedIn(false);
     navigation.navigate('HomeScreen');
   };
 
-  const login = () => {
-    navigation.navigate('TypeScreen');
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    navigation.navigate('HomeScreen'); // Naviguez vers l'écran approprié pour les utilisateurs connectés
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <View style={styles.logoContainer}>
-        <Image source={require('@/assets/images/CoupAcierApp.png')} style={styles.logoImage} />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={login}>
-        <Text style={styles.buttonText}>Je m'inscris</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Je me connecte</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleContinueAsGuest}>
-        <Text style={styles.guestText}>Continuer en tant qu'invité</Text>
-      </TouchableOpacity>
+      {!isLoggedIn ? (
+        <>
+          <View style={styles.logoContainer}>
+            <Image source={require('@/assets/images/CoupAcierApp.png')} style={styles.logoImage} />
+          </View>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TypeScreen')}>
+            <Text style={styles.buttonText}>Je m'inscris</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Je me connecte</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleContinueAsGuest}>
+            <Text style={styles.guestText}>Continuer en tant qu'invité</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <View>
+          <Text>Bienvenue, utilisateur!</Text>
+          {/* Autres composants pour les utilisateurs connectés */}
+        </View>
+      )}
     </View>
   );
 };

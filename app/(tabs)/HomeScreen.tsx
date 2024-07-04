@@ -8,10 +8,10 @@ const HomeScreen: React.FC = () => {
   return (
     <Container>
       <Header>
-        <SearchBar placeholder="Search Product" />
-        <UserIconContainer>
-          <UserIcon source={require('../../assets/images/icons8-user-32.png')} />
-        </UserIconContainer>
+        <SearchBar placeholder="Rechercher un produit" />
+        <BellIconContainer>
+          <BellIcon source={require('../../assets/images/icons8-bell-48.png')} />
+        </BellIconContainer>
       </Header>
       <ScrollView>
         <Banner>
@@ -33,7 +33,7 @@ const HomeScreen: React.FC = () => {
             <Product>
               <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
               <ProductNameContainer>
-                <ProductName>POUTRELLES I</ProductName>
+                <ProductName>POUTRELLES HE</ProductName>
               </ProductNameContainer>
             </Product>
             <Product>
@@ -101,9 +101,10 @@ const SearchBar = styled.TextInput`
   padding-left: 10px;
 `;
 
-const UserIconContainer = styled.View`
-  width: 34px;
-  height: 34px;
+const BellIconContainer = styled.View`
+  width: 35px;
+  height: 35px;
+  border: 1px solid #ccc;
   background-color: #FEE715;
   border-radius: 17px;
   justify-content: center;
@@ -111,7 +112,7 @@ const UserIconContainer = styled.View`
   margin-left: 10px;
 `;
 
-const UserIcon = styled.Image`
+const BellIcon = styled.Image`
   width: 24px;
   height: 24px;
 `;

@@ -36,7 +36,7 @@ const CartScreen: React.FC = () => {
         <Image source={{ uri: item.image }} style={styles.itemImage} />
         <View style={styles.itemInfo}>
           <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+          <Text style={styles.itemPrice}>{item.price.toFixed(2)} €</Text>
           <View style={styles.quantityContainer}>
             <Button title="-" onPress={() => handleQuantityChange(item.id, item.quantity - 1)} />
             <Text style={styles.quantity}>{item.quantity}</Text>
@@ -57,8 +57,8 @@ const CartScreen: React.FC = () => {
         keyExtractor={item => item.id}
       />
       <View style={styles.footer}>
-        <Text style={styles.totalPrice}>US ${totalPrice.toFixed(2)}</Text>
-        <Button title="CHECKOUT" onPress={() => alert('Proceed to Checkout')} />
+        <Text style={styles.totalPrice}>{totalPrice.toFixed(2)} €</Text>
+        <Button title="VALIDER" onPress={() => alert('Proceed to Checkout')} />
       </View>
     </View>
   );
