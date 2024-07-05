@@ -3,6 +3,11 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'reac
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
+  const navigation = useNavigation();
+
+  const navigateToProRegistration = () => {
+    navigation.navigate('RegistrationScreenPro');
+  };
 
   return (
     <View style={styles.container}>
@@ -13,7 +18,7 @@ const App = () => {
       <TouchableOpacity>
         <Text style={styles.loginText}>Inscription</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={navigateToProRegistration}>
         <Text style={styles.buttonText}>Professionnel</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>

@@ -3,13 +3,16 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert,
 
 const RegistrationScreen = () => {
   const [form, setForm] = useState({
-    companyName: '',
-    siretNumber: '',
-    companyAddress: '',
-    addressComplement: '',
+    prenomClient: '',
+    nomClient: '',
+    motDePasse: '',
+    codeGenere: '',
+    siret: '',
+    telephone: '',
+    statutCompte: '1', // Assuming 1 for active status
+    profilClient: 'Professionnel',
+    dateCreation: new Date().toISOString(), // Automatically set current date
     email: '',
-    phoneNumber: '',
-    password: '',
     confirmPassword: ''
   });
 
@@ -20,18 +23,18 @@ const RegistrationScreen = () => {
   const handleSubmit = async () => {
     Keyboard.dismiss(); // Dismiss keyboard on submit
 
-    if (!form.companyName || !form.siretNumber || !form.companyAddress || !form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
+    if (!form.prenomClient || !form.nomClient || !form.motDePasse || !form.siret || !form.telephone || !form.email || !form.confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    if (form.password !== form.confirmPassword) {
+    if (form.motDePasse !== form.confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5000/users/register', {
+      const response = await fetch('http://localhost:5007/Clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,28 +62,49 @@ const RegistrationScreen = () => {
       <Text style={styles.title}>Inscription Professionnel</Text>
       <TextInput
         style={styles.input}
-        placeholder="Nom de la société"
-        value={form.companyName}
-        onChangeText={(value) => handleChange('companyName', value)}
+        placeholder="Prénom"
+        value={form.prenomClient}
+        onChangeText={(value) => handleChange('prenomClient', value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Nom"
+        value={form.nomClient}
+        onChangeText={(value) => handleChange('nomClient', value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Mot de passe"
+        secureTextEntry
+        value={form.motDePasse}
+        onChangeText={(value) => handleChange('motDePasse', value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirmer le mot de passe"
+        secureTextEntry
+        value={form.confirmPassword}
+        onChangeText={(value) => handleChange('confirmPassword', value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Code généré"
+        value={form.codeGenere}
+        onChangeText={(value) => handleChange('codeGenere', value)}
       />
       <TextInput
         style={styles.input}
         placeholder="Numéro de SIRET"
-        value={form.siretNumber}
-        onChangeText={(value) => handleChange('siretNumber', value)}
+        value={form.siret}
+        onChangeText={(value) => handleChange('siret', value)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
-        placeholder="Adresse Postale de la société"
-        value={form.companyAddress}
-        onChangeText={(value) => handleChange('companyAddress', value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Complément d'adresse"
-        value={form.addressComplement}
-        onChangeText={(value) => handleChange('addressComplement', value)}
+        placeholder="Numéro de téléphone"
+        value={form.telephone}
+        onChangeText={(value) => handleChange('telephone', value)}
+        keyboardType="phone-pad"
       />
       <TextInput
         style={styles.input}
@@ -89,27 +113,6 @@ const RegistrationScreen = () => {
         onChangeText={(value) => handleChange('email', value)}
         keyboardType="email-address"
         autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Numéro de téléphone"
-        value={form.phoneNumber}
-        onChangeText={(value) => handleChange('phoneNumber', value)}
-        keyboardType="phone-pad"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        secureTextEntry
-        value={form.password}
-        onChangeText={(value) => handleChange('password', value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirmer le mot de passe"
-        secureTextEntry
-        value={form.confirmPassword}
-        onChangeText={(value) => handleChange('confirmPassword', value)}
       />
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>S'inscrire</Text>
