@@ -6,7 +6,11 @@ const App = () => {
   const navigation = useNavigation();
 
   const navigateToProRegistration = () => {
-    navigation.navigate('RegistrationScreenPro');
+    navigation.navigate('RegistrationScreenPro', { profil: 'Professionnel' });
+  };
+
+  const navigateToParticularRegistration = () => {
+    navigation.navigate('RegistrationScreenPart', { profil: 'Particulier' });
   };
 
   return (
@@ -21,7 +25,7 @@ const App = () => {
       <TouchableOpacity style={styles.button} onPress={navigateToProRegistration}>
         <Text style={styles.buttonText}>Professionnel</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={navigateToParticularRegistration}>
         <Text style={styles.buttonText}>Particulier</Text>
       </TouchableOpacity>
     </View>
