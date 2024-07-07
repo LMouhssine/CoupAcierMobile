@@ -60,12 +60,12 @@ export default function TabLayout() {
         }}
       />
       {/* Masquer les autres écrans de la barre de navigation */}
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="ProductPage"
         options={{
           tabBarButton: () => null,
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="Notifications"
         options={{

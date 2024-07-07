@@ -1,17 +1,22 @@
 // src/HomeScreen.tsx
 import React from 'react';
-import { TextInput, Image, ScrollView } from 'react-native';
+import { TextInput, Image, ScrollView, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <Container>
       <Header>
         <SearchBar placeholder="Rechercher un produit" />
-        <BellIconContainer>
-          <BellIcon source={require('../../assets/images/icons8-bell-48.png')} />
-        </BellIconContainer>
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+          <BellIconContainer>
+            <BellIcon source={require('../../assets/images/icons8-bell-48.png')} />
+          </BellIconContainer>
+        </TouchableOpacity>
       </Header>
       <ScrollView>
         <Banner>
