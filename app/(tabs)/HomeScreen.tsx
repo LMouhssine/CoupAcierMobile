@@ -11,7 +11,7 @@ const HomeScreen: React.FC = () => {
   return (
     <Container>
       <Header>
-        <SearchBar placeholder="Rechercher un produit" />
+        <SearchBar placeholder="Rechercher un produit" placeholderTextColor="#888" />
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <BellIconContainer>
             <BellIcon source={require('../../assets/images/icons8-bell-48.png')} />
@@ -96,6 +96,8 @@ const Header = styled.View`
   align-items: center;
   padding: 10px;
   background-color: #f8f8f8;
+  border-bottom-width: 1px;
+  border-bottom-color: #ddd;
 `;
 
 const SearchBar = styled.TextInput`
@@ -104,6 +106,8 @@ const SearchBar = styled.TextInput`
   border: 1px solid #ccc;
   border-radius: 8px;
   padding-left: 10px;
+  margin-right: 10px;
+  background-color: #fff;
 `;
 
 const BellIconContainer = styled.View`
@@ -114,7 +118,6 @@ const BellIconContainer = styled.View`
   border-radius: 17px;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
 `;
 
 const BellIcon = styled.Image`
@@ -133,11 +136,14 @@ const BannerImage = styled(ImageBackground)`
   align-items: center;
   width: 100%;
   height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const BannerText = styled.View`
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
 `;
 
 const Tagline = styled.Text`
@@ -156,8 +162,7 @@ const HighlightedTagline = styled.Text`
   color: #000;
   background-color: #FEE715;
   padding: 2px;
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-top: 5px;
 `;
 
 const ProductListContainer = styled.View`
@@ -185,7 +190,6 @@ const Product = styled.View`
   shadow-opacity: 0.2;
   shadow-radius: 4px;
   elevation: 2;
-  justify-content: space-between;
 `;
 
 const ProductImage = styled.Image`

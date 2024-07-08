@@ -14,12 +14,9 @@ const OrdersScreen = () => {
           name="arrow-back"
           type="material"
           size={28}
-          color="#fff"
+          color="#000"
           onPress={() => navigation.goBack()}
         />
-        <View style={styles.headerIcons}>
-          <Icon name="settings" type="material" size={28} color="#fff" onPress={() => {}} />
-        </View>
       </View>
       <Text style={styles.title}>Orders</Text>
       <View style={styles.orderContainer}>
@@ -41,35 +38,30 @@ const styles = StyleSheet.create({
     marginTop: 60,
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#000',
+    backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
     paddingHorizontal: 10,
     marginTop: 20,
   },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   title: {
     fontSize: 24,
-    color: '#FFD700',
+    color: '#333',
     fontWeight: 'bold',
     marginBottom: 16,
   },
   orderContainer: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#f0f0f0',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
   },
   orderText: {
     fontSize: 16,
-    color: '#FFF',
+    color: '#333',
   },
   trackOrdersButton: {
     backgroundColor: '#FFD700',

@@ -21,12 +21,12 @@ const ProductPage = () => {
           name="arrow-back"
           type="material"
           size={28}
-          color="#fff"
+          color="#000"
           onPress={() => navigation.goBack()}
         />
         <View style={styles.headerIcons}>
-          <Icon name="shopping-cart" type="material" size={28} color="#fff" onPress={() => {}} />
-          <Icon name="favorite" type="material" size={28} color="#fff" onPress={() => {}} />
+          <Icon name="shopping-cart" type="material" size={28} color="#000" onPress={() => {}} />
+          <Icon name="favorite" type="material" size={28} color="#000" onPress={() => {}} />
         </View>
       </View>
       <Image source={{ uri: 'image-url' }} style={styles.image} />
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#000',
+    backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
@@ -91,17 +91,17 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 8,
     marginBottom: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
   },
   title: {
     fontSize: 24,
-    color: '#FFD700',
+    color: '#333',
     fontWeight: 'bold',
     marginBottom: 8,
   },
   price: {
     fontSize: 20,
-    color: '#FFF',
+    color: '#333',
     marginBottom: 8,
   },
   delivery: {
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: '#FFF',
+    color: '#333',
   },
   counter: {
     flexDirection: 'row',
@@ -129,25 +129,25 @@ const styles = StyleSheet.create({
   },
   counterText: {
     fontSize: 18,
-    color: '#FFF',
+    color: '#333',
     marginHorizontal: 16,
   },
   informationTitle: {
     fontSize: 18,
-    color: '#FFF',
+    color: '#333',
     fontWeight: 'bold',
     marginBottom: 8,
   },
   informationText: {
     fontSize: 16,
-    color: '#FFF',
+    color: '#333',
     marginBottom: 16,
   },
   paymentMethods: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: '#f0f0f0',
     padding: 8,
     borderRadius: 8,
   },
