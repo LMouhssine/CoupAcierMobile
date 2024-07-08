@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Button, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 interface CartItem {
   id: string;
@@ -21,6 +23,7 @@ const initialCartItems: CartItem[] = [
 
 const CartScreen: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+  const navigation = useNavigation();
 
   const handleQuantityChange = (id: string, quantity: number) => {
     setCartItems(prevItems =>
@@ -28,6 +31,10 @@ const CartScreen: React.FC = () => {
         item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
       )
     );
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
   const renderItem = ({ item }: { item: CartItem }) => (
@@ -43,6 +50,9 @@ const CartScreen: React.FC = () => {
             <Button title="+" onPress={() => handleQuantityChange(item.id, item.quantity + 1)} />
           </View>
         </View>
+        <TouchableOpacity onPress={() => handleRemoveItem(item.id)} style={styles.removeButton}>
+          <Text style={styles.removeButtonText}>Supprimer</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -51,6 +61,16 @@ const CartScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Icon
+          name="arrow-back"
+          type="material"
+          size={28}
+          color="#fff"
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.title}>Panier</Text>
+      </View>
       <FlatList
         data={cartItems}
         renderItem={renderItem}
@@ -69,21 +89,43 @@ const styles = StyleSheet.create({
     marginTop: 60,
     flex: 1,
     padding: 10,
+    backgroundColor: '#f9f9f9',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    backgroundColor: '#000',
+    padding: 10,
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    marginLeft: 10,
   },
   cartItem: {
     marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   itemDetails: {
     flexDirection: 'row',
-    marginTop: 5,
+    alignItems: 'center',
     padding: 10,
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
   },
   itemImage: {
     width: 50,
     height: 50,
+    borderRadius: 5,
   },
   itemInfo: {
     marginLeft: 10,
@@ -101,11 +143,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
-    color: 'yellow',
   },
   quantity: {
     marginHorizontal: 10,
     fontSize: 16,
+  },
+  removeButton: {
+    marginLeft: 10,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: '#ff4444',
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontSize: 12,
   },
   footer: {
     flexDirection: 'row',
@@ -114,6 +165,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: '#ccc',
+    backgroundColor: '#fff',
   },
   totalPrice: {
     fontSize: 18,
