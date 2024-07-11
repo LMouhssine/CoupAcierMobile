@@ -1,4 +1,3 @@
-// src/NotificationsScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
@@ -17,8 +16,8 @@ const NotificationsScreen = () => {
           color="#000"
           onPress={() => navigation.goBack()}
         />
+        <Text style={styles.title}>Notifications</Text>
       </View>
-      <Text style={styles.title}>Notifications</Text>
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
           Notification 1: Vous avez une nouvelle offre sur votre produit préféré.
@@ -60,15 +59,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: '#333',
     fontWeight: 'bold',
-    marginBottom: 16,
+    color: '#333',
+    marginLeft: 10,
   },
   notificationContainer: {
     backgroundColor: '#f0f0f0',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   notificationText: {
     fontSize: 16,
