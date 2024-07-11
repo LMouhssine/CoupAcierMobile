@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -33,7 +33,7 @@ const FavoritesScreen: React.FC = () => {
           <Text style={styles.itemPrice}>{item.price.toFixed(2)} €</Text>
         </View>
         <TouchableOpacity onPress={() => handleRemoveItem(item.id)} style={styles.removeButton}>
-          <Text style={styles.removeButtonText}>Supprimer</Text>
+          <Icon name="delete" type="material" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -46,7 +46,7 @@ const FavoritesScreen: React.FC = () => {
           name="arrow-back"
           type="material"
           size={28}
-          color="#fff"
+          color="#000"
           onPress={() => navigation.goBack()}
         />
         <Text style={styles.title}>Favoris</Text>
@@ -64,27 +64,26 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 60,
     flex: 1,
-    padding: 10,
-    backgroundColor: '#f9f9f9',
+    padding: 16,
+    backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    backgroundColor: '#000',
-    padding: 10,
-    borderRadius: 8,
+    marginBottom: 16,
+    paddingHorizontal: 10,
+    marginTop: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFD700',
+    color: '#333',
     marginLeft: 10,
   },
   favoriteItem: {
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    marginBottom: 16,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   itemDetails: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    padding: 16,
     borderBottomWidth: 1,
     borderColor: '#ddd',
   },
@@ -110,6 +109,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
   },
   itemPrice: {
     color: '#888',
@@ -120,10 +120,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     backgroundColor: '#ff4444',
-  },
-  removeButtonText: {
-    color: '#fff',
-    fontSize: 12,
   },
 });
 

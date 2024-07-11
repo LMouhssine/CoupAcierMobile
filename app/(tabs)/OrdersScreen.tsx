@@ -1,4 +1,3 @@
-// src/OrdersScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
@@ -17,8 +16,8 @@ const OrdersScreen = () => {
           color="#000"
           onPress={() => navigation.goBack()}
         />
+        <Text style={styles.title}>Orders</Text>
       </View>
-      <Text style={styles.title}>Orders</Text>
       <View style={styles.orderContainer}>
         <Text style={styles.orderText}>Order 1: Product A - 2 pcs</Text>
       </View>
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#333',
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginLeft: 10, // Ajout d'une marge gauche pour séparer le titre de l'icône
   },
   orderContainer: {
     backgroundColor: '#f0f0f0',
