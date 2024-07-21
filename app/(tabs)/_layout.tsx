@@ -48,6 +48,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="ProfileScreen"
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="person" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           tabBarStyle: { display: 'none' },
