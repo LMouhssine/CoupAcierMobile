@@ -1,11 +1,15 @@
-### Prérequis
+# CoupAcierMobile
+
+CoupAcier Mobile permet aux clients d'acheter directement des métaux dans divers formats et dimensions personnalisées. L'application offre des fonctionnalités de prise de commandes, aide à la découpe, et suivi des livraisons. Les livreurs peuvent gérer et confirmer les livraisons en temps réel. En interne, l'application aide à la gestion des stocks, à la démarche commerciale et à la coordination des livraisons. Disponible sur iOS et Android, CoupAcier Mobile optimise l'efficacité et la satisfaction des clients et des équipes.
+
+## Prérequis
 
 - Node.js
 - npm ou yarn
 - Android Studio (pour l'émulateur Android)
 - Xcode (pour l'émulateur iOS)
 
-### Instructions
+## Instructions
 
 1. Clonez le dépôt :
     ```bash
@@ -40,3 +44,7 @@
         # ou
         yarn ios
         ```
+
+## Auteurs
+
+- **LMouhssine** - *Développeur principal* - [LMouhssine](https://github.com/LMouhssine)
