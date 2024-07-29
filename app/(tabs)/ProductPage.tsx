@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,12 +7,34 @@ const ProductPage = () => {
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
+  const [dimensionA, setDimensionA] = useState<string>('');
+  const [dimensionB, setDimensionB] = useState<string>('');
+  const [dimensionC, setDimensionC] = useState<string>('');
+  const [dimensionD, setDimensionD] = useState<string>('');
+  const [mass, setMass] = useState<number | null>(null);
+  const [price, setPrice] = useState<number | null>(null);
 
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => quantity > 1 && setQuantity(quantity - 1);
 
   const incrementLength = () => setLength(length + 1);
   const decrementLength = () => length > 1 && setLength(length - 1);
+
+  const calculateMassAndPrice = () => {
+    let calculatedMass = 0;
+    if (dimensionA && dimensionB) {
+      const A = parseFloat(dimensionA);
+      const B = parseFloat(dimensionB);
+      calculatedMass = (A * B * 7.85) / 1000; // approx for steel density
+    } else if (dimensionC && dimensionD) {
+      const C = parseFloat(dimensionC);
+      const D = parseFloat(dimensionD);
+      calculatedMass = (C * D * 7.85) / 1000; // approx for steel density
+    }
+    
+    setMass(calculatedMass);
+    setPrice(calculatedMass * 0.3);
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -49,6 +71,42 @@ const ProductPage = () => {
           <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} />
         </View>
       </View>
+      <Text style={styles.label}>Dimensions du profil</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Dimension A (mm)"
+        keyboardType="numeric"
+        value={dimensionA}
+        onChangeText={setDimensionA}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Dimension B (mm)"
+        keyboardType="numeric"
+        value={dimensionB}
+        onChangeText={setDimensionB}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Dimension C (mm)"
+        keyboardType="numeric"
+        value={dimensionC}
+        onChangeText={setDimensionC}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Dimension D (mm)"
+        keyboardType="numeric"
+        value={dimensionD}
+        onChangeText={setDimensionD}
+      />
+      <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} />
+      {mass !== null && price !== null && (
+        <View style={styles.results}>
+          <Text>Masse Linéaire: {mass.toFixed(2)} kg/m</Text>
+          <Text>Prix de Découpe: {price.toFixed(2)} €</Text>
+        </View>
+      )}
       <Text style={styles.informationTitle}>Informations</Text>
       <Text style={styles.informationText}>
         Fabriquées avec précision à partir d'acier de haute qualité, ces cornières offrent une
@@ -131,6 +189,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333',
     marginHorizontal: 16,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#000',
+    padding: 8,
+    marginVertical: 8,
+    fontSize: 18,
+    color: '#333',
+  },
+  calculateButton: {
+    backgroundColor: '#FFD700',
+    padding: 12,
+    marginVertical: 16,
+  },
+  results: {
+    marginTop: 16,
   },
   informationTitle: {
     fontSize: 18,

@@ -6,11 +6,11 @@ const App = () => {
   const navigation = useNavigation();
 
   const navigateToProRegistration = () => {
-    navigation.navigate('RegistrationScreenPro', { profil: 'Professionnel' });
+    navigation.navigate('RegistrationScreenPro');
   };
 
   const navigateToParticularRegistration = () => {
-    navigation.navigate('RegistrationScreenPart', { profil: 'Particulier' });
+    navigation.navigate('RegistrationScreenPart');
   };
 
   return (

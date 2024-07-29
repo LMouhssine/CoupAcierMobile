@@ -7,7 +7,7 @@ CREATE TABLE client (
     nomClient    Varchar (50) NOT NULL ,
     motDePasse   Varchar (200) NOT NULL ,
     codeGenere   Varchar (100) ,
-    siret        Varchar (14) NOT NULL ,
+    siret        Varchar (14) NULL ,
     telephone    Varchar (13) NOT NULL ,
     statutCompte Bool NOT NULL ,
     profilClient Enum ("Particulier","Professionnel") NOT NULL ,

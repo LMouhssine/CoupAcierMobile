@@ -35,7 +35,7 @@ const NewClientForm = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5007/Clients', {
+      const response = await fetch('http://localhost:5006/Clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
