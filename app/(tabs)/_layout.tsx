@@ -60,14 +60,17 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarStyle: { display: 'none' },
+          tabBarButton: () => null,
         }}
       />
       <Tabs.Screen
         name="TypeScreen"
         options={{
           tabBarStyle: { display: 'none' },
+          tabBarButton: () => null,
         }}
       />
+
       {/* Masquer les autres écrans de la barre de navigation */}
       {/* <Tabs.Screen
         name="ProductPage"
