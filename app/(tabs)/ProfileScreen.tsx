@@ -1,10 +1,66 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+// ProfileScreen.js
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
+  const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
+
+      if (!token || !userId) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5006/login/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserInfo(data);
+        } else {
+          Alert.alert('Erreur', 'Impossible de récupérer les informations de l\'utilisateur');
+        }
+      } catch (error) {
+        Alert.alert('Erreur', `Erreur de connexion au serveur : ${error.message}`);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text>Chargement...</Text>
+      </View>
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <View style={styles.container}>
+        <Text>Veuillez vous connecter pour voir votre profil.</Text>
+        <Button title="Se connecter" onPress={() => navigation.navigate('Login')} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -21,31 +77,31 @@ const ProfileScreen = () => {
       <View style={styles.profileContainer}>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Prénom: </Text>
-          John
+          {userInfo.prenomClient}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Nom: </Text>
-          Doe
+          {userInfo.nomClient}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Email: </Text>
-          john.doe@example.com
+          {userInfo.email}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Téléphone: </Text>
-          0987654326
+          {userInfo.telephone}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Siret: </Text>
-          12345678901234
+          {userInfo.siret}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Profil: </Text>
-          Particulier
+          {userInfo.profilClient}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Date de Création: </Text>
-          2024-06-29 17:02:40
+          {userInfo.dateCreation}
         </Text>
       </View>
       <Button title="Modifier Profil" buttonStyle={styles.editProfileButton} onPress={() => alert('Modifier Profil')} />

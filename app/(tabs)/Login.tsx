@@ -1,62 +1,55 @@
+// Login.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type RootStackParamList = {
-  Profile: { client: any };
-};
-
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
-
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const handleLogin = async () => {
-    const clientCredentials = {
+    const loginData = {
       email,
       password,
     };
 
     try {
-      const response = await fetch('http://localhost:5007/Clients', {
+      const response = await fetch('http://localhost:5006/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(clientCredentials),
+        body: JSON.stringify(loginData),
       });
 
-      if (!response.ok) {
-        throw new Error('Email ou mot de passe incorrect');
-      }
-
-      const client = await response.json();
-      navigation.navigate('Profile', { client });
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert('Erreur', error.message);
+      if (response.ok) {
+        const data = await response.json();
+        const { accessToken, user_id } = data;
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('userId', user_id.toString());
+        Alert.alert('Succès', 'Connexion réussie');
+        navigation.navigate('Main');
       } else {
-        Alert.alert('Erreur', 'Une erreur est survenue');
+        const errorData = await response.json();
+        Alert.alert('Erreur', errorData.message);
       }
+    } catch (error) {
+      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
       />
+      <Text style={styles.label}>Mot de Passe</Text>
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -68,16 +61,11 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   input: {
     borderWidth: 1,
