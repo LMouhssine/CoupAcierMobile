@@ -37,7 +37,7 @@ const ProductPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Icon
           name="arrow-back"
@@ -51,98 +51,115 @@ const ProductPage = () => {
           <Icon name="favorite" type="material" size={28} color="#000" onPress={() => {}} />
         </View>
       </View>
-      <Image source={{ uri: 'image-url' }} style={styles.image} />
-      <Text style={styles.title}>CORNIÈRES A AILES INÉGALES</Text>
-      <Text style={styles.price}>98.99€</Text>
-      <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
-      <View style={styles.quantityContainer}>
-        <Text style={styles.label}>Quantité</Text>
-        <View style={styles.counter}>
-          <Button title="-" onPress={decrementQuantity} buttonStyle={styles.counterButton} />
-          <Text style={styles.counterText}>{quantity}</Text>
-          <Button title="+" onPress={incrementQuantity} buttonStyle={styles.counterButton} />
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <Image source={{ uri: 'image-url' }} style={styles.image} />
+        <Text style={styles.title}>CORNIÈRES A AILES INÉGALES</Text>
+        <Text style={styles.price}>98.99€</Text>
+        <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
+        <View style={styles.quantityContainer}>
+          <Text style={styles.label}>Quantité</Text>
+          <View style={styles.counter}>
+            <Button title="-" onPress={decrementQuantity} buttonStyle={styles.counterButton} />
+            <Text style={styles.counterText}>{quantity}</Text>
+            <Button title="+" onPress={incrementQuantity} buttonStyle={styles.counterButton} />
+          </View>
         </View>
-      </View>
-      <View style={styles.quantityContainer}>
-        <Text style={styles.label}>Longueur (cm)</Text>
-        <View style={styles.counter}>
-          <Button title="-" onPress={decrementLength} buttonStyle={styles.counterButton} />
-          <Text style={styles.counterText}>{length}</Text>
-          <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} />
+        <View style={styles.quantityContainer}>
+          <Text style={styles.label}>Longueur (cm)</Text>
+          <View style={styles.counter}>
+            <Button title="-" onPress={decrementLength} buttonStyle={styles.counterButton} />
+            <Text style={styles.counterText}>{length}</Text>
+            <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} />
+          </View>
         </View>
-      </View>
-      <Text style={styles.label}>Dimensions du profil</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Dimension A (mm)"
-        keyboardType="numeric"
-        value={dimensionA}
-        onChangeText={setDimensionA}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Dimension B (mm)"
-        keyboardType="numeric"
-        value={dimensionB}
-        onChangeText={setDimensionB}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Dimension C (mm)"
-        keyboardType="numeric"
-        value={dimensionC}
-        onChangeText={setDimensionC}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Dimension D (mm)"
-        keyboardType="numeric"
-        value={dimensionD}
-        onChangeText={setDimensionD}
-      />
-      <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} />
-      {mass !== null && price !== null && (
-        <View style={styles.results}>
-          <Text>Masse Linéaire: {mass.toFixed(2)} kg/m</Text>
-          <Text>Prix de Découpe: {price.toFixed(2)} €</Text>
+        <Text style={styles.label}>Dimensions du profil</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Dimension A (mm)"
+          keyboardType="numeric"
+          value={dimensionA}
+          onChangeText={setDimensionA}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Dimension B (mm)"
+          keyboardType="numeric"
+          value={dimensionB}
+          onChangeText={setDimensionB}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Dimension C (mm)"
+          keyboardType="numeric"
+          value={dimensionC}
+          onChangeText={setDimensionC}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Dimension D (mm)"
+          keyboardType="numeric"
+          value={dimensionD}
+          onChangeText={setDimensionD}
+        />
+        <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} />
+        {mass !== null && price !== null && (
+          <View style={styles.results}>
+            <Text>Masse Linéaire: {mass.toFixed(2)} kg/m</Text>
+            <Text>Prix de Découpe: {price.toFixed(2)} €</Text>
+          </View>
+        )}
+        <Text style={styles.informationTitle}>Informations</Text>
+        <Text style={styles.informationText}>
+          Fabriquées avec précision à partir d'acier de haute qualité, ces cornières offrent une
+          résistance exceptionnelle aux contraintes mécaniques tout en étant légères et faciles à
+          manipuler.
+        </Text>
+        <View style={styles.paymentMethods}>
+          <Icon name="cc-visa" type="font-awesome" size={32} color="#000" />
+          <Icon name="cc-mastercard" type="font-awesome" size={32} color="#000" />
+          <Icon name="cc-amex" type="font-awesome" size={32} color="#000" />
+          <Icon name="paypal" type="font-awesome" size={32} color="#000" />
+          <Icon name="apple" type="font-awesome" size={32} color="#000" />
         </View>
-      )}
-      <Text style={styles.informationTitle}>Informations</Text>
-      <Text style={styles.informationText}>
-        Fabriquées avec précision à partir d'acier de haute qualité, ces cornières offrent une
-        résistance exceptionnelle aux contraintes mécaniques tout en étant légères et faciles à
-        manipuler.
-      </Text>
-      <View style={styles.paymentMethods}>
-        <Icon name="cc-visa" type="font-awesome" size={32} color="#000" />
-        <Icon name="cc-mastercard" type="font-awesome" size={32} color="#000" />
-        <Icon name="cc-amex" type="font-awesome" size={32} color="#000" />
-        <Icon name="paypal" type="font-awesome" size={32} color="#000" />
-        <Icon name="apple" type="font-awesome" size={32} color="#000" />
-      </View>
-      <Button title="Acheter" buttonStyle={styles.buyButton} />
-    </ScrollView>
+        <Button title="Acheter" buttonStyle={styles.buyButton} />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 60,
-    flexGrow: 1,
-    padding: 16,
+    flex: 1,
     backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
     paddingHorizontal: 10,
-    marginTop: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    zIndex: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  scrollViewContainer: {
+    paddingTop: 70, 
+    padding: 16,
+    paddingBottom: 100,
+    flexGrow: 1,
   },
   image: {
     width: '100%',
