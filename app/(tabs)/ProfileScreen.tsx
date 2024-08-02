@@ -1,9 +1,11 @@
-// ProfileScreen.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Assurez-vous de placer une image dans le dossier assets et de l'importer
+import notLoggedInImage from '../../assets/images/login.png';
 
 const ProfileScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -57,13 +59,14 @@ const ProfileScreen = () => {
     return (
       <View style={styles.container}>
         <Text>Veuillez vous connecter pour voir votre profil.</Text>
+        <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
         <Button title="Se connecter" onPress={() => navigation.navigate('Login')} />
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
         <Icon
           name="arrow-back"
@@ -103,16 +106,24 @@ const ProfileScreen = () => {
           <Text style={styles.profileLabel}>Date de Création: </Text>
           {userInfo.dateCreation}
         </Text>
+        <Button title="Modifier Profil" buttonStyle={styles.editProfileButton} onPress={() => alert('Modifier Profil')} />
       </View>
-      <Button title="Modifier Profil" buttonStyle={styles.editProfileButton} onPress={() => alert('Modifier Profil')} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#FFF',
+  },
+  scrollContainer: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 16,
     backgroundColor: '#FFF',
   },
@@ -120,8 +131,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
-    paddingHorizontal: 10,
-    marginTop: 20,
   },
   title: {
     fontSize: 24,
@@ -130,6 +139,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   profileContainer: {
+    alignItems: 'center',
     backgroundColor: '#f0f0f0',
     padding: 16,
     borderRadius: 8,
@@ -139,6 +149,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 2,
+  },
+  notLoggedInImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 16,
   },
   profileItem: {
     fontSize: 16,
@@ -152,6 +167,7 @@ const styles = StyleSheet.create({
   editProfileButton: {
     backgroundColor: '#FFD700',
     paddingVertical: 16,
+    marginTop: 16,
   },
 });
 
