@@ -3,12 +3,10 @@ import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Assurez-vous de placer une image dans le dossier assets et de l'importer
 import notLoggedInImage from '../../assets/images/login.png';
 
 const ProfileScreen = () => {
-  const [userInfo, setUserInfo] = useState(null);
+  const [clientInfo, setClientInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -23,7 +21,7 @@ const ProfileScreen = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:5006/login/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:5006/Clients/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -33,11 +31,15 @@ const ProfileScreen = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setUserInfo(data);
+          console.log('User data:', data); // Debugging: Check the entire response
+          setClientInfo(data.data);
         } else {
+          const errorData = await response.json();
+          console.log('Error response:', errorData);
           Alert.alert('Erreur', 'Impossible de récupérer les informations de l\'utilisateur');
         }
       } catch (error) {
+        console.log('Fetch error:', error);
         Alert.alert('Erreur', `Erreur de connexion au serveur : ${error.message}`);
       }
 
@@ -47,6 +49,12 @@ const ProfileScreen = () => {
     fetchUserInfo();
   }, []);
 
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('accessToken');
+    await AsyncStorage.removeItem('userId');
+    navigation.navigate('Login'); // Navigate to the login screen
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -55,7 +63,7 @@ const ProfileScreen = () => {
     );
   }
 
-  if (!userInfo) {
+  if (!clientInfo) {
     return (
       <View style={styles.container}>
         <Text>Veuillez vous connecter pour voir votre profil.</Text>
@@ -79,34 +87,30 @@ const ProfileScreen = () => {
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Prénom: </Text>
-          {userInfo.prenomClient}
+          <Text style={styles.profileLabel}>Email: </Text>
+          {clientInfo.email}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Nom: </Text>
-          {userInfo.nomClient}
+          {clientInfo.nomClient}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Email: </Text>
-          {userInfo.email}
+          <Text style={styles.profileLabel}>Prénom: </Text>
+          {clientInfo.prenomClient}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Téléphone: </Text>
-          {userInfo.telephone}
-        </Text>
-        <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Siret: </Text>
-          {userInfo.siret}
+          {clientInfo.telephone}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Profil: </Text>
-          {userInfo.profilClient}
+          {clientInfo.profilClient}
         </Text>
         <Text style={styles.profileItem}>
           <Text style={styles.profileLabel}>Date de Création: </Text>
-          {userInfo.dateCreation}
+          {new Date(clientInfo.dateCreation).toLocaleDateString()}
         </Text>
-        <Button title="Modifier Profil" buttonStyle={styles.editProfileButton} onPress={() => alert('Modifier Profil')} />
+        <Button title="Déconnexion" onPress={handleLogout} buttonStyle={styles.logoutButton} />
       </View>
     </ScrollView>
   );
@@ -164,9 +168,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  editProfileButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
+  logoutButton: {
+    backgroundColor: '#d9534f', // Red color for logout
     marginTop: 16,
   },
 });

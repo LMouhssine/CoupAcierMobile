@@ -1,4 +1,3 @@
-// Login.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -11,13 +10,10 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    const loginData = {
-      email,
-      password,
-    };
+    const loginData = { email, password };
 
     try {
-      const response = await fetch('http://localhost:5006/login', {
+      const response = await fetch('http://127.0.0.1:5006/login', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,10 +27,9 @@ const LoginScreen = () => {
         await AsyncStorage.setItem('accessToken', accessToken);
         await AsyncStorage.setItem('userId', user_id.toString());
         Alert.alert('Succès', 'Connexion réussie');
-        navigation.navigate('Main');
+        navigation.navigate('ProfileScreen');
       } else {
-        const errorData = await response.json();
-        Alert.alert('Erreur', errorData.message);
+        Alert.alert('Erreur', 'Email ou mot de passe incorrect');
       }
     } catch (error) {
       Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
