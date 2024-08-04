@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -63,7 +63,12 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button title="Se connecter" onPress={handleLogin} buttonStyle={styles.submitButton} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+        >
+          <Text style={styles.buttonText}>Se connecter</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -112,9 +117,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#FFF',
   },
-  submitButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
+  button: {
+    backgroundColor: 'black',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '70%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 

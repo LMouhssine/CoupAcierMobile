@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notLoggedInImage from '../../assets/images/login.png';
 
+interface ClientInfo {
+  email: string;
+  nomClient: string;
+  prenomClient: string;
+  telephone: string;
+  profilClient: string;
+  dateCreation: string;
+}
+
 const ProfileScreen = () => {
-  const [clientInfo, setClientInfo] = useState(null);
+  const [clientInfo, setClientInfo] = useState<ClientInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -68,7 +77,12 @@ const ProfileScreen = () => {
       <View style={styles.container}>
         <Text>Veuillez vous connecter pour voir votre profil.</Text>
         <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
-        <Button title="Se connecter" onPress={() => navigation.navigate('Login')} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.buttonText}>Se connecter</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -110,7 +124,12 @@ const ProfileScreen = () => {
           <Text style={styles.profileLabel}>Date de Création: </Text>
           {new Date(clientInfo.dateCreation).toLocaleDateString()}
         </Text>
-        <Button title="Déconnexion" onPress={handleLogout} buttonStyle={styles.logoutButton} />
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+        >
+          <Text style={styles.buttonText}>Déconnexion</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -168,9 +187,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  button: {
+    backgroundColor: 'black',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '70%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+  },
   logoutButton: {
-    backgroundColor: '#d9534f', // Red color for logout
-    marginTop: 16,
+    backgroundColor: '#d9534f',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '70%',
+    alignItems: 'center',
   },
 });
 
