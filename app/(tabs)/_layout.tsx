@@ -70,8 +70,13 @@ export default function TabLayout() {
           tabBarButton: () => null,
         }}
       />
-
-      {/* Masquer les autres écrans de la barre de navigation */}
+      <Tabs.Screen
+        name="Login"
+        options={{
+          tabBarStyle: { display: 'none' },
+          tabBarButton: () => null,
+        }}
+      />
       {/* <Tabs.Screen
         name="ProductPage"
         options={{
@@ -87,6 +92,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="RegistrationScreenPro"
         options={{
+          tabBarStyle: { display: 'none' },
           tabBarButton: () => null,
         }}
       />
@@ -94,6 +100,7 @@ export default function TabLayout() {
         name="RegistrationScreenPart"
         options={{
           tabBarButton: () => null,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>

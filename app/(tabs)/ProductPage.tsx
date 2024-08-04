@@ -22,18 +22,24 @@ const ProductPage = () => {
 
   const calculateMassAndPrice = () => {
     let calculatedMass = 0;
+
+    // Vérification des dimensions A et B pour le fer plat
     if (dimensionA && dimensionB) {
       const A = parseFloat(dimensionA);
       const B = parseFloat(dimensionB);
-      calculatedMass = (A * B * 7.85) / 1000; // approx for steel density
-    } else if (dimensionC && dimensionD) {
+      calculatedMass = (A * B * 7.85) / 1000; // Calcul simplifié de la masse linéaire pour un fer plat
+    }
+    // Vérification des dimensions C et D pour la poutrelle HEA
+    else if (dimensionC && dimensionD) {
       const C = parseFloat(dimensionC);
       const D = parseFloat(dimensionD);
-      calculatedMass = (C * D * 7.85) / 1000; // approx for steel density
+      calculatedMass = 176; // Valeur fixe pour la poutrelle HEA, peut être ajustée si nécessaire
     }
-    
+
+    const calculatedPrice = calculatedMass * 0.3;
+
     setMass(calculatedMass);
-    setPrice(calculatedMass * 0.3);
+    setPrice(calculatedPrice);
   };
 
   return (
@@ -59,17 +65,17 @@ const ProductPage = () => {
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
           <View style={styles.counter}>
-            <Button title="-" onPress={decrementQuantity} buttonStyle={styles.counterButton} />
+            <Button title="-" onPress={decrementQuantity} buttonStyle={styles.counterButton} titleStyle={styles.buttonText} />
             <Text style={styles.counterText}>{quantity}</Text>
-            <Button title="+" onPress={incrementQuantity} buttonStyle={styles.counterButton} />
+            <Button title="+" onPress={incrementQuantity} buttonStyle={styles.counterButton} titleStyle={styles.buttonText} />
           </View>
         </View>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Longueur (cm)</Text>
           <View style={styles.counter}>
-            <Button title="-" onPress={decrementLength} buttonStyle={styles.counterButton} />
+            <Button title="-" onPress={decrementLength} buttonStyle={styles.counterButton} titleStyle={styles.buttonText} />
             <Text style={styles.counterText}>{length}</Text>
-            <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} />
+            <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} titleStyle={styles.buttonText} />
           </View>
         </View>
         <Text style={styles.label}>Dimensions du profil</Text>
@@ -101,7 +107,7 @@ const ProductPage = () => {
           value={dimensionD}
           onChangeText={setDimensionD}
         />
-        <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} />
+        <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} titleStyle={styles.buttonText} />
         {mass !== null && price !== null && (
           <View style={styles.results}>
             <Text>Masse Linéaire: {mass.toFixed(2)} kg/m</Text>
@@ -121,7 +127,7 @@ const ProductPage = () => {
           <Icon name="paypal" type="font-awesome" size={32} color="#000" />
           <Icon name="apple" type="font-awesome" size={32} color="#000" />
         </View>
-        <Button title="Acheter" buttonStyle={styles.buyButton} />
+        <Button title="Acheter" buttonStyle={styles.buyButton} titleStyle={styles.buttonText} />
       </ScrollView>
     </View>
   );
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollViewContainer: {
-    paddingTop: 70, 
+    paddingTop: 70,
     padding: 16,
     paddingBottom: 100,
     flexGrow: 1,
@@ -202,6 +208,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
     padding: 8,
   },
+  buttonText: {
+    color: '#000',
+  },
   counterText: {
     fontSize: 18,
     color: '#333',
@@ -219,6 +228,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
     padding: 12,
     marginVertical: 16,
+    borderRadius: 25,
   },
   results: {
     marginTop: 16,
@@ -245,6 +255,7 @@ const styles = StyleSheet.create({
   buyButton: {
     backgroundColor: '#FFD700',
     paddingVertical: 16,
+    borderRadius: 25,
   },
 });
 
