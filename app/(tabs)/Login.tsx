@@ -44,7 +44,7 @@ const LoginScreen = () => {
           type="material"
           size={28}
           color="#000"
-          onPress={() => navigation.navigate('TypeScreen')}
+          onPress={() => navigation.navigate('index')}
         />
         <Text style={styles.title}>Connexion</Text>
       </View>
