@@ -96,41 +96,42 @@ const ProfileScreen = () => {
           size={28}
           color="#000"
           onPress={() => navigation.goBack()}
+          containerStyle={styles.goBackIcon}
         />
         <Text style={styles.title}>Profil Client</Text>
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Email: </Text>
+          <Text style={styles.profileLabel}>Email : </Text>
           {clientInfo.email}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Nom: </Text>
+          <Text style={styles.profileLabel}>Nom : </Text>
           {clientInfo.nomClient}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Prénom: </Text>
+          <Text style={styles.profileLabel}>Prénom : </Text>
           {clientInfo.prenomClient}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Téléphone: </Text>
+          <Text style={styles.profileLabel}>Téléphone : </Text>
           {clientInfo.telephone}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Profil: </Text>
+          <Text style={styles.profileLabel}>Profil : </Text>
           {clientInfo.profilClient}
         </Text>
         <Text style={styles.profileItem}>
-          <Text style={styles.profileLabel}>Date de Création: </Text>
+          <Text style={styles.profileLabel}>Date de Création : </Text>
           {new Date(clientInfo.dateCreation).toLocaleDateString()}
         </Text>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={handleLogout}
-        >
-          <Text style={styles.buttonText}>Déconnexion</Text>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={handleLogout}
+      >
+        <Text style={styles.buttonText}>Déconnexion</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -145,8 +146,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
     backgroundColor: '#FFF',
   },
@@ -154,28 +153,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    paddingHorizontal: 10,
+    marginTop: 20,
+  },
+  goBackIcon: {
+    marginTop: 60,
   },
   title: {
+    marginTop: 60,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     marginLeft: 10,
   },
   profileContainer: {
-    alignItems: 'center',
     backgroundColor: '#f0f0f0',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
   },
   notLoggedInImage: {
-    width: 200,
-    height: 200,
+    width: 320,
+    height: 320,
     marginBottom: 16,
   },
   profileItem: {
@@ -201,13 +200,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   logoutButton: {
-    backgroundColor: '#d9534f',
+    backgroundColor: '#FF3333',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
-    marginVertical: 10,
-    width: '70%',
+    width: '100%',
     alignItems: 'center',
+    alignSelf: 'center',
   },
 });
 

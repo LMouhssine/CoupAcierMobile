@@ -63,8 +63,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   trackOrdersButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
+    backgroundColor: '#000',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    width: '100%',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });
 

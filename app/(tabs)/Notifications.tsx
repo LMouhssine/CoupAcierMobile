@@ -20,22 +20,22 @@ const NotificationsScreen = () => {
       </View>
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Notification 1: Vous avez une nouvelle offre sur votre produit préféré.
+          Notification 1 : Vous avez une nouvelle offre sur votre produit préféré.
         </Text>
       </View>
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Notification 2: Votre commande a été expédiée.
+          Notification 2 : Votre commande a été expédiée.
         </Text>
       </View>
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Notification 3: Nouvelle collection disponible maintenant.
+          Notification 3 : Nouvelle collection disponible maintenant.
         </Text>
       </View>
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Notification 4: Mise à jour de la politique de confidentialité.
+          Notification 4 : Mise à jour de la politique de confidentialité.
         </Text>
       </View>
       <Button title="Tout Marquer Comme Lu" buttonStyle={styles.markAllReadButton} />
@@ -79,8 +79,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   markAllReadButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
+    backgroundColor: '#000',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    width: '100%',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });
 

@@ -23,7 +23,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="OrdersScreen"
         options={{
-          tabBarLabel: 'Orders',
+          tabBarLabel: 'Mes Commandes',
           tabBarIcon: ({ color, size }) => (
             <TabBarIcon name="list" color={color} size={size} />
           ),
@@ -32,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="CartScreen"
         options={{
-          tabBarLabel: 'Cart',
+          tabBarLabel: 'Mon Panier',
           tabBarIcon: ({ color, size }) => (
             <TabBarIcon name="cart" color={color} size={size} />
           ),
@@ -41,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="FavoritesScreen"
         options={{
-          tabBarLabel: 'Favorites',
+          tabBarLabel: 'Mes Favoris',
           tabBarIcon: ({ color, size }) => (
             <TabBarIcon name="heart" color={color} size={size} />
           ),
@@ -50,7 +50,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ProfileScreen"
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Mon Compte',
           tabBarIcon: ({ color, size }) => (
             <TabBarIcon name="person" color={color} size={size} />
           ),
