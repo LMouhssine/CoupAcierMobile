@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#333',
     fontWeight: 'bold',
-    marginLeft: 10, // Ajout d'une marge gauche pour séparer le titre de l'icône
+    marginLeft: 10,
   },
   orderContainer: {
     backgroundColor: '#f0f0f0',

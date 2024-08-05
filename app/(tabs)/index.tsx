@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const navigation = useNavigation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (token) {
+        setIsAuthenticated(true);
+        navigation.navigate('HomeScreen'); // Redirigez vers la page d'accueil si l'utilisateur est connecté
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigation]);
 
   const handleContinueAsGuest = () => {
     navigation.navigate('HomeScreen');
@@ -12,6 +26,10 @@ const App = () => {
   const handleLogin = () => {
     navigation.navigate('Login'); // Naviguez vers l'écran de connexion
   };
+
+  if (isAuthenticated) {
+    return null; // Ne rien rendre si l'utilisateur est connecté (ou éventuellement une autre vue)
+  }
 
   return (
     <View style={styles.container}>
