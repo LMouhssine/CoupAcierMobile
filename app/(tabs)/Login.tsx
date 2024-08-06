@@ -26,14 +26,21 @@ const LoginScreen = () => {
         const { accessToken, user_id } = data;
         await AsyncStorage.setItem('accessToken', accessToken);
         await AsyncStorage.setItem('userId', user_id.toString());
-        Alert.alert('Succès', 'Connexion réussie');
-        navigation.navigate('ProfileScreen');
+        Alert.alert(
+          'Succès',
+          'Connexion réussie',
+          [{ text: 'OK', onPress: () => navigation.navigate('ProfileScreen') }]
+        );
       } else {
         Alert.alert('Erreur', 'Email ou mot de passe incorrect');
       }
     } catch (error) {
       Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
     }
+  };
+
+  const handleSignUp = () => {
+    navigation.navigate('TypeScreen');
   };
 
   return (
@@ -68,6 +75,12 @@ const LoginScreen = () => {
           onPress={handleLogin}
         >
           <Text style={styles.buttonText}>Se connecter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSignUp}
+        >
+          <Text style={styles.buttonText}>Créer un compte</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

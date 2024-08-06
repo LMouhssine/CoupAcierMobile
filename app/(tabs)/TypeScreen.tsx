@@ -13,20 +13,25 @@ const App = () => {
     navigation.navigate('RegistrationScreenPart');
   };
 
+  const navigateToIndex = () => {
+    navigation.navigate('index');
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.logoContainer}>
         <Image source={require('@/assets/images/CoupAcierApp.png')} style={styles.logoImage} />
       </View>
-      <TouchableOpacity>
-        <Text style={styles.loginText}>Inscription</Text>
-      </TouchableOpacity>
+      <Text style={styles.inscriptionText}>Quel type de compte voulez-vous créer ?</Text>
       <TouchableOpacity style={styles.button} onPress={navigateToProRegistration}>
         <Text style={styles.buttonText}>Professionnel</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={navigateToParticularRegistration}>
         <Text style={styles.buttonText}>Particulier</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={navigateToIndex}>
+        <Text style={styles.backButtonText}>Retour à la sélection</Text>
       </TouchableOpacity>
     </View>
   );
@@ -40,7 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   logoContainer: {
-    marginBottom: 50,
+    marginBottom: 30,
     alignItems: 'center',
   },
   logoImage: {
@@ -60,13 +65,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  loginText: {
+  inscriptionText: {
     marginBottom: 20,
+    marginLeft: 65,
+    marginRight: 65,
     color: 'black',
-    fontSize: 30,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    backgroundColor: '#FEE715',
+    fontSize: 24,
+    textAlign: 'center',
+    borderBottomWidth: 2,
+    borderBottomColor: '#FEE715',
+    paddingBottom: 5,
+  },
+  backButtonText: {
+    marginTop: 20,
+    color: 'black',
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 });
 

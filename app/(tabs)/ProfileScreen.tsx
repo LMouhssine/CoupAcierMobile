@@ -64,6 +64,10 @@ const ProfileScreen = () => {
     navigation.navigate('Login'); // Navigate to the login screen
   };
 
+  const handleSignUp = () => {
+    navigation.navigate('TypeScreen');
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -75,13 +79,17 @@ const ProfileScreen = () => {
   if (!clientInfo) {
     return (
       <View style={styles.container}>
-        <Text>Veuillez vous connecter pour voir votre profil.</Text>
+        <Text style={styles.notLoggedInText}>Veuillez vous connecter pour voir votre profil.</Text>
         <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Login')}
         >
           <Text style={styles.buttonText}>Se connecter</Text>
+        </TouchableOpacity>
+        {/* ici */}
+        <TouchableOpacity onPress={handleSignUp}>
+          <Text style={styles.signUpText}>Pas de compte ? Je m'inscris !</Text>
         </TouchableOpacity>
       </View>
     );
@@ -177,6 +185,14 @@ const styles = StyleSheet.create({
     height: 320,
     marginBottom: 16,
   },
+  notLoggedInText: {
+    fontSize: 24,
+    marginLeft: 35,
+    marginRight: 35,
+    color: '#333',
+    marginBottom: 25,
+    textAlign: 'center',
+  },
   profileItem: {
     fontSize: 16,
     color: '#333',
@@ -207,6 +223,13 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  signUpText: {
+    marginTop: 20,
+    color: 'black',
+    fontSize: 16,
+    textDecorationLine: 'underline',
+    textAlign: 'center',
   },
 });
 

@@ -19,13 +19,13 @@ const OrdersScreen = () => {
         <Text style={styles.title}>Orders</Text>
       </View>
       <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 1: Product A - 2 pcs</Text>
+        <Text style={styles.orderText}>Order 1 : Product A - 2 pcs</Text>
       </View>
       <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 2: Product B - 1 pcs</Text>
+        <Text style={styles.orderText}>Order 2 : Product B - 1 pcs</Text>
       </View>
       <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 3: Product C - 5 pcs</Text>
+        <Text style={styles.orderText}>Order 3 : Product C - 5 pcs</Text>
       </View>
       <Button title="Track Orders" buttonStyle={styles.trackOrdersButton} />
     </ScrollView>

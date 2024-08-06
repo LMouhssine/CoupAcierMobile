@@ -46,7 +46,11 @@ const RegistrationScreenPro = () => {
       });
 
       if (response.ok) {
-        Alert.alert('Succès', 'Client professionnel enregistré avec succès');
+        Alert.alert(
+          'Succès',
+          'Client professionnel enregistré avec succès',
+          [{ text: 'OK', onPress: () => navigation.navigate('HomeScreen') }]
+        );
       } else {
         const errorData = await response.json();
         Alert.alert('Erreur', `Une erreur est survenue lors de l'enregistrement du client: ${errorData.message}`);
