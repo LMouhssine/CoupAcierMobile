@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,12 +7,32 @@ const ProductPage = () => {
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
-  const [dimensionA, setDimensionA] = useState<string>('');
-  const [dimensionB, setDimensionB] = useState<string>('');
-  const [dimensionC, setDimensionC] = useState<string>('');
-  const [dimensionD, setDimensionD] = useState<string>('');
-  const [mass, setMass] = useState<number | null>(null);
-  const [price, setPrice] = useState<number | null>(null);
+  const [dimensionA, setDimensionA] = useState('');
+  const [dimensionB, setDimensionB] = useState('');
+  const [dimensionC, setDimensionC] = useState('');
+  const [dimensionD, setDimensionD] = useState('');
+  const [mass, setMass] = useState(null);
+  const [price, setPrice] = useState(null);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5006/products/5'); // Remplacez par l'ID de votre produit
+      if (response.ok) {
+        const productData = await response.json();
+        console.log('Product data:', productData); // Log pour vérifier les données récupérées
+        setProduct(productData);
+      } else {
+        Alert.alert('Erreur', 'Impossible de récupérer les informations du produit');
+      }
+    } catch (error) {
+      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
+    }
+  };
 
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => quantity > 1 && setQuantity(quantity - 1);
@@ -23,17 +43,14 @@ const ProductPage = () => {
   const calculateMassAndPrice = () => {
     let calculatedMass = 0;
 
-    // Vérification des dimensions A et B pour le fer plat
     if (dimensionA && dimensionB) {
       const A = parseFloat(dimensionA);
       const B = parseFloat(dimensionB);
-      calculatedMass = (A * B * 7.85) / 1000; // Calcul simplifié de la masse linéaire pour un fer plat
-    }
-    // Vérification des dimensions C et D pour la poutrelle HEA
-    else if (dimensionC && dimensionD) {
+      calculatedMass = (A * B * 7.85) / 1000;
+    } else if (dimensionC && dimensionD) {
       const C = parseFloat(dimensionC);
       const D = parseFloat(dimensionD);
-      calculatedMass = 176; // Valeur fixe pour la poutrelle HEA, peut être ajustée si nécessaire
+      calculatedMass = 176;
     }
 
     const calculatedPrice = calculatedMass * 0.3;
@@ -41,6 +58,14 @@ const ProductPage = () => {
     setMass(calculatedMass);
     setPrice(calculatedPrice);
   };
+
+  if (!product) {
+    return (
+      <View style={styles.container}>
+        <Text>Chargement...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -58,9 +83,9 @@ const ProductPage = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Image source={{ uri: 'image-url' }} style={styles.image} />
-        <Text style={styles.title}>CORNIÈRES A AILES INÉGALES</Text>
-        <Text style={styles.price}>98.99€</Text>
+        <Image source={{ uri: product.image }} style={styles.image} />
+        <Text style={styles.title}>{product.name}</Text>
+        <Text style={styles.price}>{product.price}€</Text>
         <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
@@ -115,11 +140,7 @@ const ProductPage = () => {
           </View>
         )}
         <Text style={styles.informationTitle}>Informations</Text>
-        <Text style={styles.informationText}>
-          Fabriquées avec précision à partir d'acier de haute qualité, ces cornières offrent une
-          résistance exceptionnelle aux contraintes mécaniques tout en étant légères et faciles à
-          manipuler.
-        </Text>
+        <Text style={styles.informationText}>{product.description}</Text>
         <View style={styles.paymentMethods}>
           <Icon name="cc-visa" type="font-awesome" size={32} color="#000" />
           <Icon name="cc-mastercard" type="font-awesome" size={32} color="#000" />
@@ -205,36 +226,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   counterButton: {
-    backgroundColor: '#FFD700',
-    padding: 8,
-  },
-  buttonText: {
-    color: '#000',
+    backgroundColor: '#dcdcdc',
+    paddingHorizontal: 10,
   },
   counterText: {
     fontSize: 18,
     color: '#333',
-    marginHorizontal: 16,
+    paddingHorizontal: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#000',
-    padding: 8,
-    marginVertical: 8,
-    fontSize: 18,
-    color: '#333',
+    borderColor: '#ccc',
+    padding: 10,
+    marginBottom: 15,
+    borderRadius: 5,
+    backgroundColor: '#FFF',
   },
   calculateButton: {
-    backgroundColor: '#FFD700',
-    padding: 12,
-    marginVertical: 16,
-    borderRadius: 25,
+    backgroundColor: '#FFA500',
+    paddingVertical: 10,
+    marginBottom: 15,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#FFF',
   },
   results: {
-    marginTop: 16,
+    marginBottom: 15,
   },
   informationTitle: {
-    fontSize: 18,
+    fontSize: 22,
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 8,
@@ -242,20 +263,17 @@ const styles = StyleSheet.create({
   informationText: {
     fontSize: 16,
     color: '#333',
-    marginBottom: 16,
+    marginBottom: 15,
   },
   paymentMethods: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 16,
-    backgroundColor: '#f0f0f0',
-    padding: 8,
-    borderRadius: 8,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
   },
   buyButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
-    borderRadius: 25,
+    backgroundColor: '#32CD32',
+    paddingVertical: 10,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -81,9 +81,10 @@ const RegistrationScreenPart = () => {
         
         <Text style={styles.label}>Email</Text>
         <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" />
-        
-        <Button title="Enregistrer" onPress={handleSubmit} buttonStyle={styles.submitButton} />
       </View>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Enregistrer</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -131,9 +132,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#FFF',
   },
-  submitButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 16,
+  button: {
+    backgroundColor: 'black',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '95%',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
 
