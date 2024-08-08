@@ -1,10 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert, Button } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 const OrdersScreen = () => {
   const navigation = useNavigation();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5006/commande'); // Remplace cette URL par celle de ton API
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des commandes');
+        }
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        setError(error.message);
+        Alert.alert('Erreur', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return <Text>Chargement des commandes...</Text>;
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -18,15 +45,19 @@ const OrdersScreen = () => {
         />
         <Text style={styles.title}>Orders</Text>
       </View>
-      <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 1 : Product A - 2 pcs</Text>
-      </View>
-      <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 2 : Product B - 1 pcs</Text>
-      </View>
-      <View style={styles.orderContainer}>
-        <Text style={styles.orderText}>Order 3 : Product C - 5 pcs</Text>
-      </View>
+      {error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : (
+        orders.map((order) => (
+          <View key={order.idCommande} style={styles.orderContainer}>
+            <Text style={styles.orderText}>Order ID: {order.idCommande}</Text>
+            <Text style={styles.orderText}>Status: {order.statusCommande}</Text>
+            <Text style={styles.orderText}>Type: {order.type}</Text>
+            <Text style={styles.orderText}>Date de Livraison: {new Date(order.dateLivraison).toLocaleString()}</Text>
+            <Text style={styles.orderText}>Référence: {order.reference}</Text>
+          </View>
+        ))
+      )}
       <Button title="Track Orders" buttonStyle={styles.trackOrdersButton} />
     </ScrollView>
   );
@@ -70,6 +101,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginVertical: 20,
   },
 });
 
