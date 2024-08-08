@@ -3,20 +3,33 @@ import { View, Text, Image, StyleSheet, ScrollView, TextInput, ActivityIndicator
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+// Define the interface for the product data
+interface Product {
+  id: number;
+  imagePrincipale: string;
+  nomProduit: string;
+  prixMetre: number;
+  marge: number;
+  tva: number;
+  description: string;
+  // Add other properties if needed
+}
+
 const ProductPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const productId = route.params?.id ?? 5;
+
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
   const [dimensionA, setDimensionA] = useState('');
   const [dimensionB, setDimensionB] = useState('');
   const [dimensionC, setDimensionC] = useState('');
   const [dimensionD, setDimensionD] = useState('');
-  const [mass, setMass] = useState(null);
-  const [cuttingPrice, setCuttingPrice] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(null);
-  const [product, setProduct] = useState(null);
+  const [mass, setMass] = useState<number | null>(null);
+  const [cuttingPrice, setCuttingPrice] = useState<number | null>(null);
+  const [totalPrice, setTotalPrice] = useState<number | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +47,7 @@ const ProductPage = () => {
     try {
       const response = await fetch(`http://127.0.0.1:5006/products/${productId}`);
       if (response.ok) {
-        const productData = await response.json();
+        const productData: { data: Product } = await response.json();
         setProduct(productData.data);
       } else {
         Alert.alert('Erreur', 'Impossible de récupérer les informations du produit');
@@ -68,10 +81,10 @@ const ProductPage = () => {
     const totalMass = calculatedMass * length * quantity; // Masse totale
     const cuttingPricePerKg = 0.3; // Prix de découpe par kg, par exemple
     const calculatedCuttingPrice = totalMass * cuttingPricePerKg; // Prix de découpe
-    const basePrice = product.prixMetre * length * quantity; // Prix de base du produit
-    const margin = basePrice * (product.marge / 100); // Marge
+    const basePrice = product?.prixMetre * length * quantity || 0; // Prix de base du produit
+    const margin = basePrice * ((product?.marge || 0) / 100); // Marge
     const priceWithMargin = basePrice + margin + calculatedCuttingPrice; // Prix avec marge et découpe
-    const tva = priceWithMargin * (product.tva / 100); // TVA
+    const tva = priceWithMargin * ((product?.tva || 0) / 100); // TVA
     const finalPrice = priceWithMargin + tva; // Prix final
 
     setMass(totalMass);
@@ -199,120 +212,93 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     top: 0,
-    zIndex: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 2,
+    zIndex: 10,
   },
   headerIcons: {
     flexDirection: 'row',
   },
   scrollViewContainer: {
-    alignItems: 'center',
-    paddingBottom: 20,
+    paddingTop: 80,
+    paddingHorizontal: 16,
   },
   image: {
     width: '100%',
     height: 300,
+    resizeMode: 'contain',
+    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginVertical: 10,
-    textAlign: 'center',
+    marginBottom: 10,
   },
   price: {
-    fontSize: 20,
-    color: '#007bff',
-    marginVertical: 5,
-    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   delivery: {
-    fontSize: 16,
-    color: '#888',
-    marginVertical: 5,
-    textAlign: 'center',
+    fontSize: 14,
+    color: 'green',
+    marginBottom: 10,
   },
   quantityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
-    width: '80%',
+    marginBottom: 20,
   },
   label: {
-    fontSize: 18,
-    color: '#333',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   counter: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  counterButton: {
-    backgroundColor: '#f0f0f0',
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    borderRadius: 20,
+    justifyContent: 'space-between',
+    width: 120,
   },
   counterText: {
     fontSize: 18,
-    marginHorizontal: 10,
-    color: '#333',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  counterButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 10,
   },
   input: {
-    width: '80%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#007bff',
-    fontSize: 18,
-    marginVertical: 10,
-    textAlign: 'center',
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
   calculateButton: {
-    backgroundColor: 'black',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginVertical: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
+    backgroundColor: '#007bff',
+    marginBottom: 20,
   },
   results: {
-    alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   description: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginHorizontal: 20,
+    fontSize: 14,
+    lineHeight: 20,
     marginBottom: 20,
-    color: '#333',
   },
   paymentMethods: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '80%',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   buyButton: {
-    backgroundColor: 'black',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginVertical: 10,
-    width: '100%',
-    alignItems: 'center',
+    backgroundColor: '#007bff',
+    marginBottom: 20,
   },
   error: {
     fontSize: 18,
     color: 'red',
     textAlign: 'center',
-    marginVertical: 20,
+    marginTop: 20,
   },
 });
 
