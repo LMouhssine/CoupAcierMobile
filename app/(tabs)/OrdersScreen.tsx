@@ -23,12 +23,14 @@ const OrdersScreen = () => {
   useEffect(() => {
     const retrieveClientId = async () => {
       try {
-        const storedClientId = await AsyncStorage.getItem('user_id');
+        const storedClientId = await AsyncStorage.getItem('userId');
         if (storedClientId) {
-          setClientId(Number(storedClientId));
+          const numericClientId = Number(storedClientId);
+          setClientId(numericClientId);
+          console.log("Client ID trouvé:", numericClientId);
         } else {
           console.log("Aucun client ID trouvé dans AsyncStorage");
-          setClientId(null); // Aucun client connecté
+          setClientId(null);
         }
       } catch (err) {
         console.error("Erreur lors de la récupération de l'ID client:", err);
@@ -58,6 +60,9 @@ const OrdersScreen = () => {
 
         // Filtrer les commandes par client
         const clientOrders = data.filter(order => order.idClient === clientId);
+
+        console.log("Commandes filtrées pour le client:", clientOrders);
+
         if (clientOrders.length === 0) {
           console.log("Aucune commande trouvée pour le client avec ID:", clientId);
         }

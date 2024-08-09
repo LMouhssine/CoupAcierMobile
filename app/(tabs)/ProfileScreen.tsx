@@ -87,7 +87,6 @@ const ProfileScreen = () => {
         >
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
-        {/* ici */}
         <TouchableOpacity onPress={handleSignUp}>
           <Text style={styles.signUpText}>Pas de compte ? Je m'inscris !</Text>
         </TouchableOpacity>
