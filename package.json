@@ -20,6 +20,7 @@
     "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
+    "@types/react-navigation": "^3.4.0",
     "@types/styled-components-react-native": "^5.2.5",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",

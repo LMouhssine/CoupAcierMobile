@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Button } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Order {
   idCommande: string;
@@ -17,19 +18,49 @@ const OrdersScreen = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [clientId, setClientId] = useState<number | null>(3); // Remplacez par null si non connecté
+  const [clientId, setClientId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const retrieveClientId = async () => {
+      try {
+        const storedClientId = await AsyncStorage.getItem('user_id');
+        if (storedClientId) {
+          setClientId(Number(storedClientId));
+        } else {
+          console.log("Aucun client ID trouvé dans AsyncStorage");
+          setClientId(null); // Aucun client connecté
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération de l'ID client:", err);
+        setClientId(null);
+      }
+    };
+
+    retrieveClientId();
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {
+      if (clientId === null) {
+        console.log("Aucun ID client disponible pour récupérer les commandes");
+        setLoading(false);
+        return; // Ne pas exécuter la requête si clientId est null
+      }
+
       try {
-        const response = await fetch('http://127.0.0.1:5006/commande');
+        const response = await fetch('http://127.0.0.1:5006/Orders');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des commandes');
         }
         const data: Order[] = await response.json();
 
+        console.log("Données des commandes reçues:", data); // Debugging line
+
         // Filtrer les commandes par client
         const clientOrders = data.filter(order => order.idClient === clientId);
+        if (clientOrders.length === 0) {
+          console.log("Aucune commande trouvée pour le client avec ID:", clientId);
+        }
         setOrders(clientOrders);
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -51,7 +82,6 @@ const OrdersScreen = () => {
     return <Text>Chargement des commandes...</Text>;
   }
 
-  // Affichage du message si aucun client n'est connecté
   if (clientId === null) {
     return <Text>Merci de vous connecter pour voir vos commandes.</Text>;
   }
@@ -71,17 +101,23 @@ const OrdersScreen = () => {
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        orders.map((order) => (
-          <View key={order.idCommande} style={styles.orderContainer}>
-            <Text style={styles.orderText}>Order ID: {order.idCommande}</Text>
-            <Text style={styles.orderText}>Status: {order.statusCommande}</Text>
-            <Text style={styles.orderText}>Type: {order.type}</Text>
-            <Text style={styles.orderText}>Date de Livraison: {new Date(order.dateLivraison).toLocaleString()}</Text>
-            <Text style={styles.orderText}>Référence: {order.reference}</Text>
-          </View>
-        ))
+        orders.length > 0 ? (
+          orders.map((order) => (
+            <View key={order.idCommande} style={styles.orderContainer}>
+              <Text style={styles.orderText}>Order ID: {order.idCommande}</Text>
+              <Text style={styles.orderText}>Status: {order.statusCommande}</Text>
+              <Text style={styles.orderText}>Type: {order.type}</Text>
+              <Text style={styles.orderText}>Date de Livraison: {new Date(order.dateLivraison).toLocaleString()}</Text>
+              <Text style={styles.orderText}>Référence: {order.reference}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>Aucune commande trouvée pour ce client.</Text>
+        )
       )}
-      <Button title="Track Orders" style={styles.trackOrdersButton} />
+      {orders.length > 0 && (
+        <Button title="Track Orders" style={styles.trackOrdersButton} />
+      )}
     </ScrollView>
   );
 };
