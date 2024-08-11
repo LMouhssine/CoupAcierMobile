@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import notLoggedInImage from '../../assets/images/order.png';
 
 interface Order {
   idCommande: string;
@@ -84,15 +85,24 @@ const OrdersScreen = () => {
   }, [clientId]);
 
   if (loading) {
-    return <Text>Chargement des commandes...</Text>;
+    return (
+      <View style={styles.container}>
+        <Text>Chargement des commandes...</Text>
+      </View>
+    );
   }
 
   if (clientId === null) {
-    return <Text>Merci de vous connecter pour voir vos commandes.</Text>;
+    return (
+      <View style={styles.container}>
+        <Text style={styles.notLoggedInText}>Merci de vous connecter pour voir vos commandes.</Text>
+        <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
+      </View>
+    );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
         <Icon
           name="arrow-back"
@@ -120,16 +130,19 @@ const OrdersScreen = () => {
           <Text>Aucune commande trouvée pour ce client.</Text>
         )
       )}
-      {orders.length > 0 && (
-        <Button title="Track Orders" style={styles.trackOrdersButton} />
-      )}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#FFF',
+  },
+  scrollContainer: {
     flexGrow: 1,
     padding: 16,
     backgroundColor: '#FFF',
@@ -157,14 +170,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  trackOrdersButton: {
-    backgroundColor: '#000',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    width: '100%',
-    alignItems: 'center',
-    alignSelf: 'center',
+  notLoggedInImage: {
+    width: 320,
+    height: 320,
+    marginBottom: 16,
+  },
+  notLoggedInText: {
+    fontSize: 24,
+    color: '#333',
+    marginLeft: 35,
+    marginRight: 35,
+    marginBottom: 25,
+    textAlign: 'center',
   },
   errorText: {
     color: 'red',
