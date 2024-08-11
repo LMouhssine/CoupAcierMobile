@@ -3,18 +3,6 @@ import { View, Text, Image, StyleSheet, ScrollView, TextInput, ActivityIndicator
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-// Define the interface for the product data
-interface Product {
-  id: number;
-  imagePrincipale: string;
-  nomProduit: string;
-  prixMetre: number;
-  marge: number;
-  tva: number;
-  description: string;
-  // Add other properties if needed
-}
-
 const ProductPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -95,7 +83,7 @@ const ProductPage = () => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
+        <ActivityIndicator size="large" color="#000" />
       </View>
     );
   }
@@ -115,18 +103,22 @@ const ProductPage = () => {
           name="arrow-back"
           type="material"
           size={28}
-          color="#007bff"
+          color="#000"
           onPress={() => navigation.goBack()}
         />
         <View style={styles.headerIcons}>
-          <Icon name="shopping-cart" type="material" size={28} color="#007bff" onPress={() => {}} />
-          <Icon name="favorite" type="material" size={28} color="#007bff" onPress={() => {}} />
+          <View style={styles.iconContainer}>
+            <Icon name="shopping-cart" type="material" size={25} color="#000" onPress={() => {}} />
+          </View>
+          <View style={styles.iconContainer}>
+            <Icon name="favorite" type="material" size={25} color="#000" onPress={() => {}} />
+          </View>
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <Image source={{ uri: `http://127.0.0.1:5006/images/${product.imagePrincipale}` }} style={styles.image} />
         <Text style={styles.title}>{product.nomProduit}</Text>
-        <Text style={styles.price}>{totalPrice ? `${totalPrice.toFixed(2)}€` : `${product.prixMetre}€`}</Text>
+        <Text style={styles.price}>{totalPrice ? `${totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
         <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
@@ -144,7 +136,7 @@ const ProductPage = () => {
             <Button title="+" onPress={incrementLength} buttonStyle={styles.counterButton} titleStyle={styles.buttonText} />
           </View>
         </View>
-        <Text style={styles.label}>Dimensions du profil</Text>
+        <Text style={styles.label}>Dimensions</Text>
         <TextInput
           style={styles.input}
           placeholder="Dimension A (mm)"
@@ -173,23 +165,25 @@ const ProductPage = () => {
           value={dimensionD}
           onChangeText={setDimensionD}
         />
-        <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} titleStyle={styles.buttonText} />
+        <Button title="Calculer" onPress={calculateMassAndPrice} buttonStyle={styles.calculateButton} titleStyle={styles.calculateButtonText} />
         {mass !== null && cuttingPrice !== null && totalPrice !== null && (
           <View style={styles.results}>
-            <Text>Masse Linéaire: {mass.toFixed(2)} kg/m</Text>
-            <Text>Prix de Découpe: {cuttingPrice.toFixed(2)} €</Text>
-            <Text>Prix Total: {totalPrice.toFixed(2)} €</Text>
+            <Text>Masse Linéaire : {mass.toFixed(2)} kg/m</Text>
+            <Text>Prix de Découpe : {cuttingPrice.toFixed(2)} €</Text>
+            <Text>Prix Total : {totalPrice.toFixed(2)} €</Text>
           </View>
         )}
         <Text style={styles.description}>{product.description}</Text>
-        <View style={styles.paymentMethods}>
-          <Icon name="cc-visa" type="font-awesome" size={32} color="#007bff" />
-          <Icon name="cc-mastercard" type="font-awesome" size={32} color="#007bff" />
-          <Icon name="cc-amex" type="font-awesome" size={32} color="#007bff" />
-          <Icon name="paypal" type="font-awesome" size={32} color="#007bff" />
-          <Icon name="apple" type="font-awesome" size={32} color="#007bff" />
+        <View style={styles.paymentMethodsContainer}>
+          <View style={styles.paymentMethods}>
+            <Icon name="cc-visa" type="font-awesome" size={32} color="#000" />
+            <Icon name="cc-mastercard" type="font-awesome" size={32} color="#000" />
+            <Icon name="cc-amex" type="font-awesome" size={32} color="#000" />
+            <Icon name="paypal" type="font-awesome" size={32} color="#000" />
+            <Icon name="apple" type="font-awesome" size={32} color="#000" />
+          </View>
         </View>
-        <Button title="Acheter" buttonStyle={styles.buyButton} titleStyle={styles.buttonText} />
+        <Button title="Acheter" buttonStyle={styles.buyButton} titleStyle={styles.buyButtonText} />
       </ScrollView>
     </View>
   );
@@ -217,6 +211,14 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
   },
+  iconContainer: {
+    backgroundColor: '#FEE715',
+    borderRadius: 25,
+    padding: 9,
+    marginLeft: 10,
+    borderWidth: 1.5,
+    borderColor: '#000',
+  },
   scrollViewContainer: {
     paddingTop: 80,
     paddingHorizontal: 16,
@@ -228,17 +230,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   price: {
-    fontSize: 18,
+    marginTop: 15,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   delivery: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'green',
     marginBottom: 10,
   },
@@ -250,21 +253,48 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+
   counter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 120,
+    height: 55,
+    borderWidth: 2,
+    borderColor: '#000',
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2, 
   },
+
   counterText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
     textAlign: 'center',
+    color: '#333',
   },
+
   counterButton: {
-    backgroundColor: '#007bff',
-    paddingHorizontal: 10,
+    backgroundColor: '#FEE715',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 6,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8, 
+    paddingHorizontal:  10, 
   },
+
+  buttonText: {
+    color: '#000',
+    fontSize: 15, 
+    fontWeight: 'bold',
+  },
+
   input: {
     height: 40,
     borderColor: '#ddd',
@@ -274,8 +304,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   calculateButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#000',
     marginBottom: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+  },
+  calculateButtonText: {
+    fontSize: 20,
+    color: '#fff',
   },
   results: {
     marginBottom: 20,
@@ -285,14 +322,28 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 20,
   },
+  paymentMethodsContainer: {
+    backgroundColor: '#FEE715',
+    padding: 13,
+    borderRadius: 10,
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: '#000',
+  },
   paymentMethods: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
   },
   buyButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#000',
     marginBottom: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+  },
+  buyButtonText: {
+    fontSize: 20,
+    color: '#fff',
   },
   error: {
     fontSize: 18,
