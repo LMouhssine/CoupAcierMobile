@@ -111,18 +111,18 @@ const SearchBar = styled.TextInput`
 `;
 
 const BellIconContainer = styled.View`
-  width: 35px;
-  height: 35px;
-  border: 1px solid #ccc;
+  width: 45px;
+  height: 45px;
+  border: 1px solid #000;
   background-color: #FEE715;
-  border-radius: 17px;
+  border-radius: 30px;
   justify-content: center;
   align-items: center;
 `;
 
 const BellIcon = styled.Image`
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 `;
 
 const Banner = styled.View`
@@ -201,6 +201,7 @@ const ProductImage = styled.Image`
 const ProductNameContainer = styled.View`
   background-color: #FEE715;
   width: 100%;
+  border: 1px solid #000;
   padding: 5px;
   border-radius: 4px;
   align-items: center;

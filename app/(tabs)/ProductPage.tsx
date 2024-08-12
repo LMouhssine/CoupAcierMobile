@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const ProductPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const productId = route.params?.id ?? 5;
+  const productId = route.params?.id ?? 10;
 
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
@@ -116,7 +116,7 @@ const ProductPage = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Image source={{ uri: `http://127.0.0.1:5006/images/${product.imagePrincipale}` }} style={styles.image} />
+        <Image source={{ uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}` }} style={styles.image} />
         <Text style={styles.title}>{product.nomProduit}</Text>
         <Text style={styles.price}>{totalPrice ? `${totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
         <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
@@ -210,10 +210,11 @@ const styles = StyleSheet.create({
   },
   headerIcons: {
     flexDirection: 'row',
+    marginRight: 8,
   },
   iconContainer: {
     backgroundColor: '#FEE715',
-    borderRadius: 25,
+    borderRadius: 24,
     padding: 9,
     marginLeft: 10,
     borderWidth: 1.5,
@@ -228,6 +229,9 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: 'contain',
     marginBottom: 20,
+    borderWidth: 3,
+    borderColor: '#000',
+    borderRadius: 20,
   },
   title: {
     fontSize: 25,
