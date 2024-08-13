@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import Swiper from 'react-native-swiper';
 
 const ProductPage = () => {
   const navigation = useNavigation();
@@ -116,7 +117,11 @@ const ProductPage = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Image source={{ uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}` }} style={styles.image} />
+        <Swiper style={styles.swiper} autoplay>
+          <Image source={{ uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}` }} style={styles.image} />
+          <Image source={{ uri: `http://127.0.0.1:5006/public/${product.image1}` }} style={styles.image} />
+          <Image source={{ uri: `http://127.0.0.1:5006/public/${product.image2}` }} style={styles.image} />
+        </Swiper>
         <Text style={styles.title}>{product.nomProduit}</Text>
         <Text style={styles.price}>{totalPrice ? `${totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
         <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
@@ -224,11 +229,14 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 16,
   },
+  swiper: {
+    height: 300,
+    marginBottom: 20,
+  },
   image: {
     width: '100%',
     height: 300,
     resizeMode: 'contain',
-    marginBottom: 20,
     borderWidth: 3,
     borderColor: '#000',
     borderRadius: 20,
