@@ -64,6 +64,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="PaymentScreen"
+        options={{
+          tabBarStyle: { display: 'none' },
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
         name="TypeScreen"
         options={{
           tabBarStyle: { display: 'none' },

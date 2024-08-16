@@ -64,8 +64,12 @@ const PaymentScreen = () => {
       orders.push(order);
       await AsyncStorage.setItem('orders', JSON.stringify(orders));
 
-      Alert.alert('Paiement réussi', 'Votre paiement a été traité avec succès.');
-      navigation.navigate('OrderConfirmationScreen', { orderInfo: order });
+      // Show success alert
+      Alert.alert(
+        'Paiement réussi',
+        'Votre paiement a été traité avec succès.',
+        [{ text: 'OK', onPress: () => navigation.navigate('HomeScreen') }]
+      );
 
     } catch (error) {
       console.error('Erreur lors du paiement:', error);
@@ -87,12 +91,18 @@ const PaymentScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Icon name="arrow-back" type="material" size={28} color="#000" onPress={() => navigation.goBack()} />
+        <Icon
+          name="arrow-back"
+          type="material"
+          size={28}
+          color="#000"
+          onPress={() => navigation.navigate('ProductPage')}
+        />
         <Text style={styles.headerTitle}>Paiement</Text>
       </View>
 
       <View style={styles.summaryContainer}>
-        <Text style={styles.summaryText}>Montant total à payer: {totalAmount ? `${totalAmount} €` : 'Calcul en cours...'}</Text>
+        <Text style={styles.summaryText}>Montant total à payer : {totalAmount ? `${totalAmount} €` : 'Calcul en cours...'}</Text>
       </View>
 
       <TextInput

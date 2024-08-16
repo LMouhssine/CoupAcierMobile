@@ -139,7 +139,6 @@ const ProductPage = () => {
         </Swiper>
         <Text style={styles.title}>{product.nomProduit}</Text>
         <Text style={styles.price}>{massAndPrice.totalPrice ? `${massAndPrice.totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
-        <Text style={styles.delivery}>Livraison sous 15 jours ouvrés</Text>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
           <View style={styles.counter}>
@@ -184,7 +183,7 @@ const ProductPage = () => {
             keyboardType="numeric"
           />
           <Button
-            title="Calculer les frais de port"
+            title="Calculer les frais de livraison"
             onPress={handleCalculateShippingCost}
             disabled={shippingInfo.loading}
           />
@@ -192,32 +191,31 @@ const ProductPage = () => {
           {shippingInfo.distance && <Text style={styles.shippingResult}>{shippingInfo.distance}</Text>}
           {shippingInfo.costDetails && <Text style={styles.shippingResult}>{shippingInfo.costDetails}</Text>}
         </View>
-        {totalAmount && <Text style={styles.totalAmount}>Montant total: {totalAmount} €</Text>}
+        {totalAmount && <Text style={styles.totalAmount}>Montant total : {totalAmount} €</Text>}
+        <Button title="Acheter maintenant" onPress={handleBuy} disabled={!shippingInfo.costDetails} />
       </ScrollView>
-      <Button title="Acheter maintenant" onPress={handleBuy} disabled={!shippingInfo.costDetails} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, marginTop: 60, backgroundColor: '#fff' },
   header: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#f5f5f5' },
   headerIcons: { flexDirection: 'row' },
   iconContainer: { marginLeft: 15 },
   scrollViewContainer: { padding: 20 },
   swiper: { height: 300, marginBottom: 20 },
   image: { width: '100%', height: '100%', resizeMode: 'cover' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-  price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f', marginBottom: 10 },
-  delivery: { fontSize: 16, color: '#5bc0de', marginBottom: 20 },
-  quantityContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, marginTop: 20 },
+  price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
+  quantityContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center'},
   label: { fontSize: 18, fontWeight: 'bold' },
   counter: { flexDirection: 'row', alignItems: 'center' },
   counterText: { fontSize: 18, marginHorizontal: 10 },
-  dimensionContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-  dimensionInput: { flex: 1, borderWidth: 1, borderColor: '#ccc', padding: 10, textAlign: 'center', marginRight: 10 },
+  dimensionContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 10 },
+  dimensionInput: { flex: 1, borderWidth: 1, borderColor: '#000', padding: 10, textAlign: 'center', marginRight: 10 },
   shippingContainer: { marginBottom: 20 },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10 },
+  input: { borderWidth: 1, borderColor: '#000', padding: 10, marginBottom: 20, marginTop: 20},
   shippingResult: { marginTop: 10, fontSize: 16 },
   totalAmount: { fontSize: 18, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
   loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },

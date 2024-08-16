@@ -100,15 +100,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
-        <Icon
-          name="arrow-back"
-          type="material"
-          size={28}
-          color="#000"
-          onPress={() => navigation.goBack()}
-          containerStyle={styles.goBackIcon}
-        />
-        <Text style={styles.title}>Profil Client</Text>
+      <Text style={styles.title}>Bonjour {clientInfo.prenomClient} 👋</Text>
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.profileItem}>
@@ -135,13 +127,13 @@ const ProfileScreen = () => {
           <Text style={styles.profileLabel}>Date de création : </Text>
           {new Date(clientInfo.dateCreation).toLocaleDateString()}
         </Text>
-        <TouchableOpacity
-          style={styles.button}
+      </View>
+      <TouchableOpacity
+          style={styles.buttonLogout}
           onPress={handleLogout}
         >
           <Text style={styles.buttonText}>Se déconnecter</Text>
         </TouchableOpacity>
-      </View>
     </ScrollView>
   );
 };
@@ -160,36 +152,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   header: {
-    marginTop: 60,
-    flexDirection: 'row',
+    marginTop: 100,
+    textAlign: 'center',
+    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 20,
-  },
-  goBackIcon: {
-    marginRight: 10,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+    fontStyle: 'italic',
   },
   profileContainer: {
     backgroundColor: '#f0f0f0',
-    padding: 16,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 2,
+    borderWidth: 1,
   },
   profileItem: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 8,
     color: '#333',
   },
   profileLabel: {
     fontWeight: 'bold',
+  },
+  buttonLogout: {
+    backgroundColor: '#FF3333',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: 'black',
@@ -199,27 +200,31 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '100%',
     alignItems: 'center',
+    maxWidth : '80%',
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
+    fontWeight: 'bold',
   },
   notLoggedInText: {
-    fontSize: 18,
+    fontSize: 24,
     color: '#333',
     textAlign: 'center',
     marginBottom: 20,
+    padding: 20,
   },
   notLoggedInImage: {
-    width: 250,
-    height: 250,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
     marginBottom: 30,
   },
   signUpText: {
-    color: 'blue',
     marginTop: 20,
-    textAlign: 'center',
+    color: 'black',
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 });
 
