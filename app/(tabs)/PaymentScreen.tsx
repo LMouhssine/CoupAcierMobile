@@ -1,132 +1,186 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, Alert, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { Icon } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PaymentScreen: React.FC = () => {
-  const [cardHolderName, setCardHolderName] = useState('');
+const PaymentScreen = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { productInfo } = route.params || {};
+
+  const [totalAmount, setTotalAmount] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [ccv, setCcv] = useState('');
-  const [billingAddress, setBillingAddress] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [cardHolderName, setCardHolderName] = useState('');
 
-  const handlePayment = () => {
-    // Handle the payment logic here
-    console.log('Payment Submitted');
+  useEffect(() => {
+    if (productInfo) {
+      const { totalPrice, costDetails } = productInfo;
+      if (totalPrice && costDetails) {
+        const shippingCost = parseFloat(costDetails.split('Coût TTC: ')[1].split(' €')[0]);
+        setTotalAmount((totalPrice + shippingCost).toFixed(2));
+      } else {
+        setTotalAmount(totalPrice.toFixed(2));
+      }
+    }
+  }, [productInfo]);
+
+  const handlePayment = async () => {
+    if (!totalAmount) {
+      Alert.alert('Erreur', 'Le montant total est incorrect.');
+      return;
+    }
+
+    if (!cardNumber || !expiryDate || !cvv || !cardHolderName) {
+      Alert.alert('Erreur', 'Veuillez renseigner toutes les informations de la carte.');
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      // Mock payment processing
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Assuming payment is successful, save order details
+      const order = {
+        idCommande: Math.random().toString(36).substring(7),
+        statusCommande: 'Paid',
+        type: 'Online',
+        dateLivraison: new Date().toISOString(),
+        reference: 'REF' + Math.random().toString(36).substring(2, 7).toUpperCase(),
+        idClient: await AsyncStorage.getItem('userId'), // Assuming userId is stored during login
+        totalAmount,
+        cardHolderName,
+        orderDate: new Date().toISOString(),
+      };
+
+      // Save the order to AsyncStorage
+      let orders = await AsyncStorage.getItem('orders');
+      orders = orders ? JSON.parse(orders) : [];
+      orders.push(order);
+      await AsyncStorage.setItem('orders', JSON.stringify(orders));
+
+      Alert.alert('Paiement réussi', 'Votre paiement a été traité avec succès.');
+      navigation.navigate('OrderConfirmationScreen', { orderInfo: order });
+
+    } catch (error) {
+      console.error('Erreur lors du paiement:', error);
+      Alert.alert('Erreur', 'Le paiement a échoué. Veuillez réessayer.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
+  if (isProcessing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000" />
+        <Text style={styles.processingText}>Traitement du paiement...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Paiement par CB</Text>
-        <Text style={styles.amount}>1324,00 €</Text>
+        <Icon name="arrow-back" type="material" size={28} color="#000" onPress={() => navigation.goBack()} />
+        <Text style={styles.headerTitle}>Paiement</Text>
+      </View>
+
+      <View style={styles.summaryContainer}>
+        <Text style={styles.summaryText}>Montant total à payer: {totalAmount ? `${totalAmount} €` : 'Calcul en cours...'}</Text>
       </View>
 
       <TextInput
-        style={styles.input}
-        placeholder="Nom du titulaire"
+        placeholder="Nom du titulaire de la carte"
         value={cardHolderName}
         onChangeText={setCardHolderName}
-      />
-
-      <TextInput
         style={styles.input}
-        placeholder="Numéro de CB"
-        keyboardType="numeric"
+      />
+      <TextInput
+        placeholder="Numéro de carte"
         value={cardNumber}
         onChangeText={setCardNumber}
+        keyboardType="numeric"
+        style={styles.input}
       />
-
-      <View style={styles.row}>
+      <View style={styles.cardDetailsContainer}>
         <TextInput
-          style={[styles.input, styles.smallInput]}
-          placeholder="Date d’expiration"
+          placeholder="Date d'expiration (MM/AA)"
           value={expiryDate}
           onChangeText={setExpiryDate}
-        />
-
-        <TextInput
-          style={[styles.input, styles.smallInput]}
-          placeholder="CCV"
           keyboardType="numeric"
-          value={ccv}
-          onChangeText={setCcv}
+          style={[styles.input, styles.smallInput]}
+        />
+        <TextInput
+          placeholder="CVV"
+          value={cvv}
+          onChangeText={setCvv}
+          keyboardType="numeric"
+          secureTextEntry
+          style={[styles.input, styles.smallInput]}
         />
       </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Adresse de facturation"
-        value={billingAddress}
-        onChangeText={setBillingAddress}
-      />
-
-      <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
-        <Text style={styles.payButtonText}>Payer</Text>
-      </TouchableOpacity>
+      <Button title="Payer maintenant" onPress={handlePayment} disabled={!totalAmount || isProcessing} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    marginTop: 60,
+    backgroundColor: '#FFF',
+    padding: 16,
   },
   header: {
-    backgroundColor: '#FEE715',
-    padding: 20,
-    borderRadius: 30,
-    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  title: {
+  headerTitle: {
     fontSize: 20,
-    fontWeight: 'light',
-    fontStyle: 'italic',
-    textAlign: 'center',
-    marginBottom: 50,
-  },
-  amount: {
-    fontSize: 32,
     fontWeight: 'bold',
-    fontStyle: 'italic',
-    color: '#000',
-    textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 80,
+    marginLeft: 8,
+  },
+  summaryContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  summaryText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#E67E22',
   },
   input: {
-    backgroundColor: '#f3f3f3',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 8,
+    borderRadius: 4,
+    marginVertical: 8,
   },
-  row: {
+  cardDetailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   smallInput: {
+    width: '48%',
+  },
+  loadingContainer: {
     flex: 1,
-    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  payButton: {
-    backgroundColor: '#000',
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 20,
-  },
-  payButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  processingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#555',
   },
 });
 

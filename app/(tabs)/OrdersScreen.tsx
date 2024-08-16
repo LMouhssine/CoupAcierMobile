@@ -5,18 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notLoggedInImage from '../../assets/images/order.png';
 
-interface Order {
-  idCommande: string;
-  statusCommande: string;
-  type: string;
-  dateLivraison: string;
-  reference: string;
-  idClient: number;
-}
-
 const OrdersScreen = () => {
   const navigation = useNavigation();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
@@ -51,18 +42,11 @@ const OrdersScreen = () => {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5006/Orders');
-        if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des commandes');
-        }
-        const data: Order[] = await response.json();
+        let storedOrders = await AsyncStorage.getItem('orders');
+        let orders = storedOrders ? JSON.parse(storedOrders) : [];
 
-        console.log("Données des commandes reçues:", data); // Debugging line
-
-        // Filtrer les commandes par client
-        const clientOrders = data.filter(order => order.idClient === clientId);
-
-        console.log("Commandes filtrées pour le client:", clientOrders);
+        // Filter the orders for the logged-in client
+        const clientOrders = orders.filter(order => order.idClient == clientId);
 
         if (clientOrders.length === 0) {
           console.log("Aucune commande trouvée pour le client avec ID:", clientId);
@@ -124,6 +108,8 @@ const OrdersScreen = () => {
               <Text style={styles.orderText}>Type: {order.type}</Text>
               <Text style={styles.orderText}>Date de Livraison: {new Date(order.dateLivraison).toLocaleString()}</Text>
               <Text style={styles.orderText}>Référence: {order.reference}</Text>
+              <Text style={styles.orderText}>Montant Total: {order.totalAmount} €</Text>
+              <Text style={styles.orderText}>Titulaire de la carte: {order.cardHolderName}</Text>
             </View>
           ))
         ) : (
