@@ -50,7 +50,7 @@ const ProductPage = () => {
   const handleDimensionChange = (key, value) => setDimensions(prev => ({ ...prev, [key]: value }));
 
   const massAndPrice = useMemo(() => {
-    if (!product) return { mass: 0, cuttingPrice: 0, priceHT: 0, tva: 0, totalPriceTTC: 0 };
+    if (!product) return { mass: 0, cuttingPrice: 0, totalPrice: 0 };
 
     const A = parseFloat(dimensions.A);
     const B = parseFloat(dimensions.B);
@@ -66,12 +66,11 @@ const ProductPage = () => {
 
     const totalMass = mass * length * quantity;
     const cuttingPrice = totalMass * 0.3;
-    const basePriceHT = (product.prixMetre || 0) * length * quantity;
-    const priceHT = basePriceHT * (1 + (product.marge || 0) / 100) + cuttingPrice;
-    const tva = priceHT * (product.tva / 100);
-    const totalPriceTTC = priceHT + tva;
+    const basePrice = (product.prixMetre || 0) * length * quantity;
+    const priceWithMargin = basePrice * (1 + (product.marge || 0) / 100) + cuttingPrice;
+    const totalPrice = priceWithMargin * (1 + (product.tva || 0) / 100);
 
-    return { mass: totalMass, cuttingPrice, priceHT, tva, totalPriceTTC };
+    return { mass: totalMass, cuttingPrice, totalPrice };
   }, [quantity, length, dimensions, product]);
 
   const handleCalculateShippingCost = async () => {
@@ -84,11 +83,11 @@ const ProductPage = () => {
     try {
       const clientAddress = await geocodeAddress(address);
       const { distance, warehouse } = await calculateDistanceToClient(clientAddress);
-      const { totalCost } = calculateTotalCost(parseFloat(weight), distance);
+      const { costHT, totalCost, tax } = calculateTotalCost(parseFloat(weight), distance);
 
       setShippingInfo({
-        distance: `${distance.toFixed(2)} km`,
-        costDetails: `Prix de livraison: ${totalCost.toFixed(2)} €`,
+        distance: `Distance: ${distance.toFixed(2)} km (Entrepôt: ${warehouse.name})`,
+        costDetails: `Coût HT: ${costHT.toFixed(2)} €, TVA: ${tax.toFixed(2)} €, Coût TTC: ${totalCost.toFixed(2)} €`,
         loading: false
       });
     } catch (error) {
@@ -109,14 +108,14 @@ const ProductPage = () => {
     }
 
     const productInfo = {
-      productId, quantity, length, dimensions, totalPrice: massAndPrice.totalPriceTTC, mass: massAndPrice.mass,
+      productId, quantity, length, dimensions, totalPrice: massAndPrice.totalPrice, mass: massAndPrice.mass,
       cuttingPrice: massAndPrice.cuttingPrice, address, weight, ...shippingInfo
     };
     navigation.navigate('PaymentScreen', { productInfo });
   };
 
-  const totalAmount = massAndPrice.totalPriceTTC && shippingInfo.costDetails
-    ? (massAndPrice.totalPriceTTC + parseFloat(shippingInfo.costDetails.split(': ')[1].split(' €')[0])).toFixed(2)
+  const totalAmount = massAndPrice.totalPrice && shippingInfo.costDetails
+    ? (massAndPrice.totalPrice + parseFloat(shippingInfo.costDetails.split('Coût TTC: ')[1].split(' €')[0])).toFixed(2)
     : null;
 
   if (loading) return <ActivityIndicator style={styles.loading} size="large" color="#000" />;
@@ -139,18 +138,7 @@ const ProductPage = () => {
           ))}
         </Swiper>
         <Text style={styles.title}>{product.nomProduit}</Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.label}>Prix HT :</Text>
-          <Text style={styles.price}>{massAndPrice.priceHT.toFixed(2)} €</Text>
-        </View>
-        <View style={styles.priceContainer}>
-          <Text style={styles.label}>TVA :</Text>
-          <Text style={styles.price}>{massAndPrice.tva.toFixed(2)} €</Text>
-        </View>
-        <View style={styles.priceContainer}>
-          <Text style={styles.label}>Prix TTC :</Text>
-          <Text style={styles.price}>{massAndPrice.totalPriceTTC.toFixed(2)} €</Text>
-        </View>
+        <Text style={styles.price}>{massAndPrice.totalPrice ? `${massAndPrice.totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
           <View style={styles.counter}>
@@ -199,15 +187,11 @@ const ProductPage = () => {
             onPress={handleCalculateShippingCost}
             disabled={shippingInfo.loading}
           />
-          {shippingInfo.loading && <ActivityIndicator style={styles.loading} size="large" color="#000" />}
-          {shippingInfo.distance && <Text style={styles.shippingResult}>Distance : {shippingInfo.distance}</Text>}
-          {shippingInfo.costDetails && (
-            <Text style={styles.shippingResult}>{shippingInfo.costDetails}</Text>
-          )}
+          {shippingInfo.loading && <ActivityIndicator size="small" color="#000" />}
+          {shippingInfo.distance && <Text style={styles.shippingResult}>{shippingInfo.distance}</Text>}
+          {shippingInfo.costDetails && <Text style={styles.shippingResult}>{shippingInfo.costDetails}</Text>}
         </View>
-        {totalAmount && (
-          <Text style={styles.totalAmount}>Prix Total : {totalAmount} €</Text>
-        )}
+        {totalAmount && <Text style={styles.totalAmount}>Montant total : {totalAmount} €</Text>}
         <Button title="Acheter maintenant" onPress={handleBuy} disabled={!shippingInfo.costDetails} />
       </ScrollView>
     </View>
@@ -223,16 +207,15 @@ const styles = StyleSheet.create({
   swiper: { height: 300, marginBottom: 20 },
   image: { width: '100%', height: '100%', resizeMode: 'cover' },
   title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, marginTop: 20 },
-  priceContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f' },
-  quantityContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' },
+  price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
+  quantityContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center'},
   label: { fontSize: 18, fontWeight: 'bold' },
   counter: { flexDirection: 'row', alignItems: 'center' },
   counterText: { fontSize: 18, marginHorizontal: 10 },
   dimensionContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 10 },
   dimensionInput: { flex: 1, borderWidth: 1, borderColor: '#000', padding: 10, textAlign: 'center', marginRight: 10 },
   shippingContainer: { marginBottom: 20 },
-  input: { borderWidth: 1, borderColor: '#000', padding: 10, marginBottom: 20, marginTop: 20 },
+  input: { borderWidth: 1, borderColor: '#000', padding: 10, marginBottom: 20, marginTop: 20},
   shippingResult: { marginTop: 10, fontSize: 16 },
   totalAmount: { fontSize: 18, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
   loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
