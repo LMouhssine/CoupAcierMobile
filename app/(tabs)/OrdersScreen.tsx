@@ -1,74 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import notLoggedInImage from '../../assets/images/order.png';
+
+interface Order {
+  id: string;
+  date: string;
+  total: number;
+  status: string;
+}
 
 const OrdersScreen = () => {
-  const navigation = useNavigation();
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [clientId, setClientId] = useState<number | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const retrieveClientId = async () => {
-      try {
-        const storedClientId = await AsyncStorage.getItem('userId');
-        if (storedClientId) {
-          const numericClientId = Number(storedClientId);
-          setClientId(numericClientId);
-          console.log("Client ID trouvé:", numericClientId);
-        } else {
-          console.log("Aucun client ID trouvé dans AsyncStorage");
-          setClientId(null);
-        }
-      } catch (err) {
-        console.error("Erreur lors de la récupération de l'ID client:", err);
-        setClientId(null);
+  const fetchOrders = async () => {
+    const token = await AsyncStorage.getItem('accessToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (!token || !userId) {
+      Alert.alert('Erreur', 'Utilisateur non connecté');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:5006/orders/client-orders/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data.data);  // Assurez-vous que la structure de la réponse correspond
+      } else {
+        const errorData = await response.json();
+        Alert.alert('Erreur', `Erreur lors de la récupération des commandes: ${errorData.message}`);
       }
-    };
+    } catch (error) {
+      Alert.alert('Erreur', `Erreur de connexion au serveur: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    retrieveClientId();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchOrders();
+    }, [])
+  );
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      if (clientId === null) {
-        console.log("Aucun ID client disponible pour récupérer les commandes");
-        setLoading(false);
-        return; // Ne pas exécuter la requête si clientId est null
-      }
-
-      try {
-        let storedOrders = await AsyncStorage.getItem('orders');
-        let orders = storedOrders ? JSON.parse(storedOrders) : [];
-
-        // Filter the orders for the logged-in client
-        const clientOrders = orders.filter(order => order.idClient == clientId);
-
-        if (clientOrders.length === 0) {
-          console.log("Aucune commande trouvée pour le client avec ID:", clientId);
-        }
-        setOrders(clientOrders);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-          Alert.alert('Erreur', error.message);
-        } else {
-          setError(String(error));
-          Alert.alert('Erreur', String(error));
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [clientId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <Text>Chargement des commandes...</Text>
@@ -76,46 +61,24 @@ const OrdersScreen = () => {
     );
   }
 
-  if (clientId === null) {
+  if (orders.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.notLoggedInText}>Merci de vous connecter pour voir vos commandes.</Text>
-        <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
+        <Text style={styles.noOrdersText}>Aucune commande trouvée.</Text>
       </View>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.header}>
-        <Icon
-          name="arrow-back"
-          type="material"
-          size={28}
-          color="#000"
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.title}>Orders</Text>
-      </View>
-      {error ? (
-        <Text style={styles.errorText}>{error}</Text>
-      ) : (
-        orders.length > 0 ? (
-          orders.map((order) => (
-            <View key={order.idCommande} style={styles.orderContainer}>
-              <Text style={styles.orderText}>Order ID: {order.idCommande}</Text>
-              <Text style={styles.orderText}>Status: {order.statusCommande}</Text>
-              <Text style={styles.orderText}>Type: {order.type}</Text>
-              <Text style={styles.orderText}>Date de Livraison: {new Date(order.dateLivraison).toLocaleString()}</Text>
-              <Text style={styles.orderText}>Référence: {order.reference}</Text>
-              <Text style={styles.orderText}>Montant Total: {order.totalAmount} €</Text>
-              <Text style={styles.orderText}>Titulaire de la carte: {order.cardHolderName}</Text>
-            </View>
-          ))
-        ) : (
-          <Text>Aucune commande trouvée pour ce client.</Text>
-        )
-      )}
+      {orders.map((order) => (
+        <View key={order.id} style={styles.orderContainer}>
+          <Text style={styles.orderItem}>Commande ID : {order.id}</Text>
+          <Text style={styles.orderItem}>Date : {new Date(order.date).toLocaleDateString()}</Text>
+          <Text style={styles.orderItem}>Total : {order.total} €</Text>
+          <Text style={styles.orderItem}>Statut : {order.status}</Text>
+        </View>
+      ))}
     </ScrollView>
   );
 };
@@ -123,6 +86,7 @@ const OrdersScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 60,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -133,46 +97,27 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#FFF',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 10,
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 24,
+  noOrdersText: {
+    fontSize: 18,
     color: '#333',
-    fontWeight: 'bold',
-    marginLeft: 10,
+    textAlign: 'center',
   },
   orderContainer: {
     backgroundColor: '#f0f0f0',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+    borderWidth: 1,
   },
-  orderText: {
+  orderItem: {
     fontSize: 16,
+    marginBottom: 8,
     color: '#333',
-  },
-  notLoggedInImage: {
-    width: 320,
-    height: 320,
-    marginBottom: 16,
-  },
-  notLoggedInText: {
-    fontSize: 24,
-    color: '#333',
-    marginLeft: 35,
-    marginRight: 35,
-    marginBottom: 25,
-    textAlign: 'center',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    marginVertical: 20,
   },
 });
 
