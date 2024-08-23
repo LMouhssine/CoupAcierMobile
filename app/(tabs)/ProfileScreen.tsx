@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import notLoggedInImage from '../../assets/images/login.png';
+
+const notLoggedInImage = require('../../assets/images/login.png');
 
 interface ClientInfo {
   email: string;
@@ -14,7 +14,7 @@ interface ClientInfo {
   dateCreation: string;
 }
 
-const ProfileScreen = () => {
+const ProfileScreen: React.FC = () => {
   const [clientInfo, setClientInfo] = useState<ClientInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
@@ -51,7 +51,7 @@ const ProfileScreen = () => {
           }
         } catch (error) {
           console.log('Fetch error:', error);
-          Alert.alert('Erreur', `Erreur de connexion au serveur : ${error.message}`);
+          Alert.alert('Erreur', `Erreur de connexion au serveur : ${(error as Error).message}`);
         }
 
         setIsLoading(false);
@@ -100,7 +100,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
-      <Text style={styles.title}>Bonjour {clientInfo.prenomClient} 👋</Text>
+        <Text style={styles.title}>Bonjour {clientInfo.prenomClient} 👋</Text>
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.profileItem}>
@@ -129,11 +129,11 @@ const ProfileScreen = () => {
         </Text>
       </View>
       <TouchableOpacity
-          style={styles.buttonLogout}
-          onPress={handleLogout}
-        >
-          <Text style={styles.buttonText}>Se déconnecter</Text>
-        </TouchableOpacity>
+        style={styles.buttonLogout}
+        onPress={handleLogout}
+      >
+        <Text style={styles.buttonText}>Se déconnecter</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

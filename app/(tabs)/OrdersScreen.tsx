@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialIcons } from '@expo/vector-icons'; // Pour les icônes
 
 interface Order {
-  id: string;
-  date: string;
-  total: number;
-  status: string;
+  idCommande: number; // Assurez-vous que idCommande est de type nombre
+  dateCommande: string;
+  statusCommande: string;
+  type: string;
+  reference: string;
 }
 
 const OrdersScreen = () => {
@@ -35,7 +37,8 @@ const OrdersScreen = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setOrders(data.data);  // Assurez-vous que la structure de la réponse correspond
+        // Assurez-vous que la structure des données est correcte
+        setOrders(data.data || []);
       } else {
         const errorData = await response.json();
         Alert.alert('Erreur', `Erreur lors de la récupération des commandes: ${errorData.message}`);
@@ -56,7 +59,8 @@ const OrdersScreen = () => {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <Text>Chargement des commandes...</Text>
+        <ActivityIndicator size="large" color="#007BFF" />
+        <Text style={styles.loadingText}>Chargement des commandes...</Text>
       </View>
     );
   }
@@ -70,53 +74,67 @@ const OrdersScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {orders.map((order) => (
-        <View key={order.id} style={styles.orderContainer}>
-          <Text style={styles.orderItem}>Commande ID : {order.id}</Text>
-          <Text style={styles.orderItem}>Date : {new Date(order.date).toLocaleDateString()}</Text>
-          <Text style={styles.orderItem}>Total : {order.total} €</Text>
-          <Text style={styles.orderItem}>Statut : {order.status}</Text>
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Mes Commandes</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {orders.map((order) => (
+          <View key={order.idCommande} style={styles.orderContainer}>
+            <MaterialIcons name="local-shipping" size={24} color="#007BFF" />
+            <Text style={styles.orderItem}>Commande ID : {order.idCommande}</Text>
+            <Text style={styles.orderItem}>Date : {new Date(order.dateCommande).toLocaleDateString()}</Text>
+            <Text style={styles.orderItem}>Référence : {order.reference}</Text>
+            <Text style={styles.orderItem}>Statut : {order.statusCommande}</Text>
+            <Text style={styles.orderItem}>Type : {order.type}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginTop: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
     padding: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: '#F5F5F5',
   },
   scrollContainer: {
     flexGrow: 1,
-    padding: 16,
-    backgroundColor: '#FFF',
+    paddingHorizontal: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#007BFF',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#333',
+    marginTop: 10,
   },
   noOrdersText: {
     fontSize: 18,
     color: '#333',
     textAlign: 'center',
+    marginTop: 20,
   },
   orderContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#FFFFFF',
     padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
-    borderWidth: 1,
+    borderRadius: 12,
+    marginBottom: 15,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
   },
   orderItem: {
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 6,
     color: '#333',
   },
 });

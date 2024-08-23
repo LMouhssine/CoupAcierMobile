@@ -1,4 +1,3 @@
-// src/HomeScreen.tsx
 import React from 'react';
 import { TextInput, Image, ScrollView, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';

@@ -12,7 +12,7 @@ import { calculateDistanceToClient, calculateTotalCost } from '../../backend/uti
 const ProductPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const productId = route.params?.id ?? 10;
+  const productId = route.params?.id ?? 8;
 
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
@@ -139,6 +139,12 @@ const ProductPage = () => {
         </Swiper>
         <Text style={styles.title}>{product.nomProduit}</Text>
         <Text style={styles.price}>{massAndPrice.totalPrice ? `${massAndPrice.totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
+        <Text style={styles.description}>{product.description}</Text>
+        <Text style={styles.details}>Hauteur: {product.hauteur} cm</Text>
+        <Text style={styles.details}>Épaisseur: {product.epaisseur} cm</Text>
+        <Text style={styles.details}>Masse Linéaire: {product.masseLineaire} kg/m</Text>
+        <Text style={styles.details}>Référence: {product.referenceProduit}</Text>
+        <Text style={styles.details}>Catégorie ID: {product.idCategorie}</Text>
         <View style={styles.quantityContainer}>
           <Text style={styles.label}>Quantité</Text>
           <View style={styles.counter}>
@@ -208,6 +214,8 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%', resizeMode: 'cover' },
   title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, marginTop: 20 },
   price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
+  description: { fontSize: 16, marginBottom: 20 },
+  details: { fontSize: 16, marginBottom: 10 },
   quantityContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center'},
   label: { fontSize: 18, fontWeight: 'bold' },
   counter: { flexDirection: 'row', alignItems: 'center' },
@@ -219,7 +227,7 @@ const styles = StyleSheet.create({
   shippingResult: { marginTop: 10, fontSize: 16 },
   totalAmount: { fontSize: 18, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
   loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  error: { textAlign: 'center', fontSize: 18, color: 'red', marginTop: 20 },
+  error: { textAlign: 'center', fontSize: 18, color: 'red', marginTop: 80 },
 });
 
 export default ProductPage;
