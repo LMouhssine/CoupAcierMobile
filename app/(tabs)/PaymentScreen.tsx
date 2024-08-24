@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Alert, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import QRCode from 'react-native-qrcode-svg';
+
+// Fonction pour générer une référence unique de 11 caractères
+const generateUniqueReference = () => {
+  const prefix = 'REF';
+  const uniqueNumber = (Date.now() % 1000000000).toString().padStart(8, '0'); // Limite à 8 chiffres
+  return `${prefix}${uniqueNumber}`.slice(0, 11); // Assure que la longueur totale ne dépasse pas 11 caractères
+};
 
 const PaymentScreen = () => {
   const route = useRoute();
@@ -15,22 +21,16 @@ const PaymentScreen = () => {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [cardHolderName, setCardHolderName] = useState('');
-  const [qrCodeData, setQrCodeData] = useState(null);
 
   useEffect(() => {
     if (productInfo) {
-      console.log('productInfo:', productInfo); // Log pour vérifier les données reçues
-      
       const { totalPrice, costDetails } = productInfo;
-      
       if (totalPrice && costDetails) {
         const shippingCost = parseFloat(costDetails.split('Coût TTC: ')[1].split(' €')[0]);
         setTotalAmount((totalPrice + shippingCost).toFixed(2));
       } else {
         setTotalAmount(totalPrice.toFixed(2));
       }
-    } else {
-      Alert.alert('Erreur', 'Aucune information sur le produit disponible.');
     }
   }, [productInfo]);
 
@@ -45,11 +45,6 @@ const PaymentScreen = () => {
       return;
     }
 
-    if (!productInfo || !productInfo.productId) { // Utiliser productId comme identifiant du produit
-      Alert.alert('Erreur', 'La référence du produit est manquante ou invalide.');
-      return;
-    }
-
     setIsProcessing(true);
 
     try {
@@ -59,19 +54,25 @@ const PaymentScreen = () => {
       // Format de date correct pour MySQL (YYYY-MM-DD HH:MM:SS)
       const dateLivraison = new Date().toISOString().split('T').join(' ').split('.')[0];
 
-      // Créer l'objet de la commande
+      // Générer une référence unique
+      const uniqueReference = generateUniqueReference();
+
+      // Enregistrer les détails de la commande après un paiement réussi
       const order = {
-        statusCommande: 'En attente',
-        devis: false,
-        type: 'Commande',
-        dateLivraison,
-        referenceLivraison: 'REF12345', // Remplacez par une vraie valeur si disponible
-        ModeReception: 'A LIVRER',
-        reference: productInfo.productId.toString(), // Utilisation de productId comme référence
+        statusCommande: 'En attente', // Utilisez une valeur valide de l'énumération
+        devis: false, // Ajoutez une valeur pour 'devis'
+        type: 'Commande', // Assurez-vous de fournir une valeur valide pour 'type'
+        dateLivraison, // Date correctement formatée
+        referenceLivraison: 'REF12345', // Exemple de valeur pour la référence de livraison
+        ModeReception: 'A LIVRER', // Exemple de valeur pour le mode de réception
+        reference: uniqueReference, // Utiliser la référence unique générée
         idClient: await AsyncStorage.getItem('userId'),
         total: totalAmount,
         cardHolderName,
+        productId: productInfo.productId, // Ajouter l'ID du produit
       };
+
+      console.log('Détails de la commande:', order); // Log des détails de la commande avant l'envoi
 
       const token = await AsyncStorage.getItem('accessToken');
       const response = await fetch('http://127.0.0.1:5006/orders', {
@@ -83,11 +84,12 @@ const PaymentScreen = () => {
         body: JSON.stringify(order)
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        const qrCodeReference = result.idCommande;
-        setQrCodeData(qrCodeReference);
+      console.log('Réponse brute de l\'API:', response); // Log pour vérifier la réponse brute de l'API
 
+      const result = await response.json();
+      console.log('Résultat de la réponse:', result); // Log des données de la réponse
+
+      if (response.ok) {
         // Sauvegarder la commande dans AsyncStorage
         let orders = await AsyncStorage.getItem('orders');
         orders = orders ? JSON.parse(orders) : [];
@@ -100,14 +102,18 @@ const PaymentScreen = () => {
           [{ text: 'OK', onPress: () => navigation.navigate('OrdersScreen') }]
         );
       } else {
+        // Log pour vérifier le message d'erreur renvoyé par l'API
+        console.error('Erreur dans la réponse de l\'API:', result.message);
         Alert.alert('Erreur', `Erreur lors du paiement: ${result.message}`);
       }
 
     } catch (error) {
+      // Log pour capturer les erreurs dans le bloc try
       console.error('Erreur lors du paiement:', error);
       Alert.alert('Erreur', 'Le paiement a échoué. Veuillez réessayer.');
     } finally {
       setIsProcessing(false);
+      console.log('Fin du traitement du paiement');
     }
   };
 
@@ -162,18 +168,6 @@ const PaymentScreen = () => {
       </View>
 
       <Button title="Payer maintenant" onPress={handlePayment} disabled={!totalAmount || isProcessing} />
-
-      {qrCodeData && (
-        <View style={styles.qrCodeContainer}>
-          <Text style={styles.qrCodeText}>Votre QR Code:</Text>
-          <QRCode
-            value={qrCodeData}
-            size={200}
-            color="black"
-            backgroundColor="white"
-          />
-        </View>
-      )}
     </View>
   );
 };
@@ -226,14 +220,6 @@ const styles = StyleSheet.create({
   processingText: {
     marginTop: 10,
     fontSize: 16,
-  },
-  qrCodeContainer: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  qrCodeText: {
-    fontSize: 18,
-    marginBottom: 10,
   },
 });
 

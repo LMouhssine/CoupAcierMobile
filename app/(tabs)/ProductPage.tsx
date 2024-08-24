@@ -12,7 +12,7 @@ import { calculateDistanceToClient, calculateTotalCost } from '../../backend/uti
 const ProductPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const productId = route.params?.id ?? 8;
+  const productId = route.params?.id ?? 10;
 
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
@@ -132,9 +132,15 @@ const ProductPage = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Swiper style={styles.swiper}>
+        <Swiper style={styles.swiper} showsPagination={true} autoplay={true}>
           {[product.imagePrincipale, product.image1, product.image2].map((image, index) => (
-            <Image key={index} source={{ uri: `http://127.0.0.1:5006/public/${image}` }} style={styles.image} />
+            <View key={index} style={styles.imageWrapper}>
+              <Image
+                source={{ uri: `http://127.0.0.1:5006/public/${image}` }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </View>
           ))}
         </Swiper>
         <Text style={styles.title}>{product.nomProduit}</Text>
@@ -211,7 +217,19 @@ const styles = StyleSheet.create({
   iconContainer: { marginLeft: 15 },
   scrollViewContainer: { padding: 20 },
   swiper: { height: 300, marginBottom: 20 },
-  image: { width: '100%', height: '100%', resizeMode: 'cover' },
+  imageWrapper: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderColor: '#ddd', 
+    backgroundColor: '#f9f9f9', 
+    margin: 5 
+  },
+  image: { 
+    width: '100%', 
+    height: '100%' 
+  },
   title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, marginTop: 20 },
   price: { fontSize: 20, fontWeight: 'bold', color: '#d9534f', marginBottom: 20 },
   description: { fontSize: 16, marginBottom: 20 },

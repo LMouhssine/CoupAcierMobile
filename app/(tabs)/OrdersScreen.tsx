@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialIcons } from '@expo/vector-icons'; // Pour les icônes
 
 interface Order {
   idCommande: number; // Assurez-vous que idCommande est de type nombre
   dateCommande: string;
   statusCommande: string;
   type: string;
-  reference: string;
 }
 
 const OrdersScreen = () => {
@@ -38,7 +36,11 @@ const OrdersScreen = () => {
       if (response.ok) {
         const data = await response.json();
         // Assurez-vous que la structure des données est correcte
-        setOrders(data.data || []);
+        if (Array.isArray(data.data)) {
+          setOrders(data.data);
+        } else {
+          Alert.alert('Erreur', 'Les données reçues ne sont pas valides.');
+        }
       } else {
         const errorData = await response.json();
         Alert.alert('Erreur', `Erreur lors de la récupération des commandes: ${errorData.message}`);
@@ -79,10 +81,8 @@ const OrdersScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {orders.map((order) => (
           <View key={order.idCommande} style={styles.orderContainer}>
-            <MaterialIcons name="local-shipping" size={24} color="#007BFF" />
             <Text style={styles.orderItem}>Commande ID : {order.idCommande}</Text>
             <Text style={styles.orderItem}>Date : {new Date(order.dateCommande).toLocaleDateString()}</Text>
-            <Text style={styles.orderItem}>Référence : {order.reference}</Text>
             <Text style={styles.orderItem}>Statut : {order.statusCommande}</Text>
             <Text style={styles.orderItem}>Type : {order.type}</Text>
           </View>

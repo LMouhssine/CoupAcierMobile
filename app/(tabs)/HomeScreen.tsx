@@ -1,11 +1,48 @@
-import React from 'react';
-import { TextInput, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { TextInput, Image, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import styled from 'styled-components/native';
 import { ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5006/products');
+        console.log('Response status:', response.status);
+        if (!response.ok) throw new Error('Erreur lors de la récupération des produits.');
+        
+        const data = await response.json();
+        console.log('Data received:', data);
+        
+        // Accéder aux produits via data.data
+        if (!Array.isArray(data.data)) {
+          throw new Error('Les données récupérées ne sont pas un tableau.');
+        }
+        
+        setProducts(data.data); // Mettre à jour le state avec le tableau de produits
+      } catch (error) {
+        console.error('Fetch error:', error);
+        Alert.alert('Erreur', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleProductPress = (productId) => {
+    navigation.navigate('ProductPage', { id: productId });
+  };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#000" />;
+  }
 
   return (
     <Container>
@@ -28,60 +65,30 @@ const HomeScreen: React.FC = () => {
         </Banner>
         <ProductListContainer>
           <ProductList>
-            <Product>
-              <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>POUTRELLES HE</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/poutrelles_he_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>POUTRELLES HE</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>BARRES RONDES</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>BARRES RONDES</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>NOUVEAU PRODUIT</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>NOUVEAU PRODUIT</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>NOUVEAU PRODUIT</ProductName>
-              </ProductNameContainer>
-            </Product>
-            <Product>
-              <ProductImage source={require('../../assets/images/barres_rondes_img.gif')} />
-              <ProductNameContainer>
-                <ProductName>NOUVEAU PRODUIT</ProductName>
-              </ProductNameContainer>
-            </Product>
+            {Array.isArray(products) && products.length > 0 ? (
+              products.map((product) => (
+                <Product key={product.idProduit}>
+                  <TouchableOpacity onPress={() => handleProductPress(product.idProduit)}>
+                    <ProductImageContainer>
+                      <ProductImage source={{ uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}` }} />
+                    </ProductImageContainer>
+                    <ProductNameContainer>
+                      <ProductName>{product.nomProduit}</ProductName>
+                    </ProductNameContainer>
+                  </TouchableOpacity>
+                </Product>
+              ))
+            ) : (
+              <NoProductsText>Aucun produit disponible</NoProductsText>
+            )}
           </ProductList>
         </ProductListContainer>
       </ScrollView>
     </Container>
   );
 };
+
+// Styles
 
 const Container = styled.View`
   margin-top: 70px;
@@ -114,7 +121,7 @@ const BellIconContainer = styled.View`
   height: 45px;
   border: 1px solid #000;
   background-color: #FEE715;
-  border-radius: 30px;
+  border-radius: 22.5px;
   justify-content: center;
   align-items: center;
 `;
@@ -130,11 +137,10 @@ const Banner = styled.View`
 `;
 
 const BannerImage = styled(ImageBackground)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 200px;
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
   overflow: hidden;
 `;
@@ -167,7 +173,6 @@ const HighlightedTagline = styled.Text`
 const ProductListContainer = styled.View`
   flex: 1;
   padding: 10px;
-  align-items: center;
 `;
 
 const ProductList = styled.View`
@@ -191,15 +196,27 @@ const Product = styled.View`
   elevation: 2;
 `;
 
-const ProductImage = styled.Image`
+const ProductImageContainer = styled.View`
   width: 100px;
   height: 100px;
   margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ProductImage = styled.Image`
+  width: 100%;
+  height: 100%;
+  resize-mode: cover;
 `;
 
 const ProductNameContainer = styled.View`
   background-color: #FEE715;
   width: 100%;
+  min-width: 150px;
   border: 1px solid #000;
   padding: 5px;
   border-radius: 4px;
@@ -214,6 +231,13 @@ const ProductName = styled.Text`
   flex-shrink: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const NoProductsText = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
 `;
 
 export default HomeScreen;
