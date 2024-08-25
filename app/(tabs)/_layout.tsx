@@ -84,12 +84,12 @@ export default function TabLayout() {
           tabBarButton: () => null,
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="ProductPage"
         options={{
           tabBarButton: () => null,
         }}
-      /> */}
+      />
       <Tabs.Screen
         name="Notifications"
         options={{

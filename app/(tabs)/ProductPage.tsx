@@ -1,3 +1,4 @@
+// ProductPage.js
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, Image, StyleSheet, ScrollView, TextInput, ActivityIndicator, Alert, Button
@@ -118,7 +119,7 @@ const ProductPage = () => {
     ? (massAndPrice.totalPrice + parseFloat(shippingInfo.costDetails.split('Coût TTC: ')[1].split(' €')[0])).toFixed(2)
     : null;
 
-  if (loading) return <ActivityIndicator style={styles.loading} size="large" color="#000" />;
+  if (loading) return <ActivityIndicator testID="loading" style={styles.loading} size="large" color="#000" />;
 
   if (!product) return <Text style={styles.error}>Produit non trouvé.</Text>;
 
