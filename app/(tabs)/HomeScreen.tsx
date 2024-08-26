@@ -8,6 +8,7 @@ const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -19,12 +20,11 @@ const HomeScreen: React.FC = () => {
         const data = await response.json();
         console.log('Data received:', data);
         
-        // Accéder aux produits via data.data
         if (!Array.isArray(data.data)) {
           throw new Error('Les données récupérées ne sont pas un tableau.');
         }
         
-        setProducts(data.data); // Mettre à jour le state avec le tableau de produits
+        setProducts(data.data); 
       } catch (error) {
         console.error('Fetch error:', error);
         Alert.alert('Erreur', error.message);
@@ -40,6 +40,10 @@ const HomeScreen: React.FC = () => {
     navigation.navigate('ProductPage', { id: productId });
   };
 
+  const filteredProducts = products.filter(product =>
+    product.nomProduit.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return <ActivityIndicator size="large" color="#000" />;
   }
@@ -47,7 +51,12 @@ const HomeScreen: React.FC = () => {
   return (
     <Container>
       <Header>
-        <SearchBar placeholder="Rechercher un produit" placeholderTextColor="#888" />
+        <SearchBar
+          placeholder="Rechercher un produit"
+          placeholderTextColor="#888"
+          value={searchTerm}
+          onChangeText={text => setSearchTerm(text)}
+        />
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <BellIconContainer>
             <BellIcon source={require('../../assets/images/icons8-bell-48.png')} />
@@ -65,8 +74,8 @@ const HomeScreen: React.FC = () => {
         </Banner>
         <ProductListContainer>
           <ProductList>
-            {Array.isArray(products) && products.length > 0 ? (
-              products.map((product) => (
+            {Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
                 <Product key={product.idProduit}>
                   <TouchableOpacity onPress={() => handleProductPress(product.idProduit)}>
                     <ProductImageContainer>
@@ -119,7 +128,7 @@ const SearchBar = styled.TextInput`
 const BellIconContainer = styled.View`
   width: 45px;
   height: 45px;
-  border: 1px solid #000;
+  border: 1.5px solid #000;
   background-color: #FEE715;
   border-radius: 22.5px;
   justify-content: center;
@@ -127,8 +136,8 @@ const BellIconContainer = styled.View`
 `;
 
 const BellIcon = styled.Image`
-  width: 28px;
-  height: 28px;
+  width: 27px;
+  height: 27px;
 `;
 
 const Banner = styled.View`
@@ -185,21 +194,21 @@ const Product = styled.View`
   width: 48%;
   margin-bottom: 20px;
   align-items: center;
-  background-color: #fff;
+  background-color: #ccc;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 10px;
+  padding: 5px;
   shadow-color: #000;
   shadow-offset: 0px 4px;
-  shadow-opacity: 0.2;
+  shadow-opacity: 0.1;
   shadow-radius: 4px;
   elevation: 2;
 `;
 
 const ProductImageContainer = styled.View`
-  width: 100px;
-  height: 100px;
-  margin-bottom: 10px;
+  width: 180px;
+  height: 160px;
+  margin-bottom: 6px;
   border-radius: 8px;
   overflow: hidden;
   background-color: #f0f0f0;
@@ -216,7 +225,7 @@ const ProductImage = styled.Image`
 const ProductNameContainer = styled.View`
   background-color: #FEE715;
   width: 100%;
-  min-width: 150px;
+  min-width: 180px;
   border: 1px solid #000;
   padding: 5px;
   border-radius: 4px;

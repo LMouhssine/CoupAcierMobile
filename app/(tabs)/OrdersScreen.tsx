@@ -81,10 +81,10 @@ const OrdersScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {orders.map((order) => (
           <View key={order.idCommande} style={styles.orderContainer}>
-            <Text style={styles.orderItem}>Commande ID : {order.idCommande}</Text>
-            <Text style={styles.orderItem}>Date : {new Date(order.dateCommande).toLocaleDateString()}</Text>
-            <Text style={styles.orderItem}>Statut : {order.statusCommande}</Text>
-            <Text style={styles.orderItem}>Type : {order.type}</Text>
+            <Text style={styles.orderItem}><Text style={styles.boldText}>Commande ID :</Text> {order.idCommande}</Text>
+            <Text style={styles.orderItem}><Text style={styles.boldText}>Date :</Text> {new Date(order.dateCommande).toLocaleDateString()}</Text>
+            <Text style={styles.orderItem}><Text style={styles.boldText}>Statut :</Text> {order.statusCommande}</Text>
+            <Text style={styles.orderItem}><Text style={styles.boldText}>Type :</Text> {order.type}</Text>
           </View>
         ))}
       </ScrollView>
@@ -133,8 +133,12 @@ const styles = StyleSheet.create({
   },
   orderItem: {
     fontSize: 16,
+    fontStyle: 'italic',
     marginBottom: 6,
     color: '#333',
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
 });
 
