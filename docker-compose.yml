@@ -1,0 +1,8 @@
+services:
+  react-native:
+    build: .
+    ports:
+      - "8082:8081"  # Port externe 8082 mappé au port interne 8081
+    volumes:
+      - .:/app
+    command: npm start

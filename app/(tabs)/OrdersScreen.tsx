@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#007BFF',
     marginVertical: 20,
     textAlign: 'center',
   },
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   noOrdersText: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#333',
     textAlign: 'center',
     marginTop: 20,
@@ -127,8 +126,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 15,
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 4,
   },
