@@ -49,14 +49,18 @@ const RegistrationScreenPro = () => {
         Alert.alert(
           'Succès',
           'Client professionnel enregistré avec succès',
-          [{ text: 'OK', onPress: () => navigation.navigate('HomeScreen') }]
+          [{ text: 'OK', onPress: () => navigation.navigate('HomeScreen' as never) }]
         );
       } else {
         const errorData = await response.json();
         Alert.alert('Erreur', `Une erreur est survenue lors de l'enregistrement du client: ${errorData.message}`);
       }
     } catch (error) {
-      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
+      if (error instanceof Error) {
+        Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
+      } else {
+        Alert.alert('Erreur', 'Impossible de se connecter au serveur');
+      }
     }
   };
 
@@ -68,7 +72,7 @@ const RegistrationScreenPro = () => {
           type="material"
           size={28}
           color="#000"
-          onPress={() => navigation.navigate('TypeScreen')}
+          onPress={() => navigation.navigate('TypeScreen' as never)}
         />
         <Text style={styles.title}>Inscription Professionnelle</Text>
       </View>

@@ -1,4 +1,3 @@
-// ProductPage.js
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, Image, StyleSheet, ScrollView, TextInput, ActivityIndicator, Alert, Button
@@ -7,22 +6,50 @@ import { Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swiper from 'react-native-swiper';
-import { geocodeAddress } from '../../backend/utils/geocoding';
-import { calculateDistanceToClient, calculateTotalCost } from '../../backend/utils/costCalculations';
+import { geocodeAddress } from '../../utils/geocoding';
+import { calculateDistanceToClient, calculateTotalCost } from '../../utils/costCalculations';
+
+import { StackNavigationProp } from '@react-navigation/stack';
+// Create a new file at the specified path
+// Add the necessary type declarations to the file
+// Export the necessary types from the file
+export type RootStackParamList = {
+  ProductPage: { id?: number };
+  PaymentScreen: { productInfo: any }; // Add PaymentScreen type
+  // Add other types as needed
+};
+
+type ProductPageNavigationProp = StackNavigationProp<RootStackParamList, 'ProductPage'>;
 
 const ProductPage = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<ProductPageNavigationProp>();
   const route = useRoute();
-  const productId = route.params?.id ?? 10;
+  const productId = (route.params as { id?: number })?.id ?? 10;
 
   const [quantity, setQuantity] = useState(1);
   const [length, setLength] = useState(1);
-  const [dimensions, setDimensions] = useState({ A: '', B: '', C: '', D: '' });
-  const [product, setProduct] = useState(null);
+  const [dimensions, setDimensions] = useState<{ [key: string]: string }>({ A: '', B: '', C: '', D: '' });
+  interface Product {
+    prixMetre: number;
+    marge: number;
+    tva: number;
+    nomProduit: string;
+    description: string;
+    hauteur: number;
+    epaisseur: number;
+    masseLineaire: number;
+    referenceProduit: string;
+    idCategorie: number;
+    imagePrincipale: string;
+    image1: string;
+    image2: string;
+  }
+
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState('');
   const [weight, setWeight] = useState('');
-  const [shippingInfo, setShippingInfo] = useState({ distance: null, costDetails: null, loading: false });
+  const [shippingInfo, setShippingInfo] = useState<{ distance: string | null, costDetails: string | null, loading: boolean }>({ distance: null, costDetails: null, loading: false });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -33,7 +60,7 @@ const ProductPage = () => {
         const { data } = await response.json();
         setProduct(data);
       } catch (error) {
-        Alert.alert('Erreur', error.message);
+        Alert.alert('Erreur', (error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -48,7 +75,7 @@ const ProductPage = () => {
     checkLoginStatus();
   }, [productId]);
 
-  const handleDimensionChange = (key, value) => setDimensions(prev => ({ ...prev, [key]: value }));
+  const handleDimensionChange = (key: string, value: string) => setDimensions(prev => ({ ...prev, [key]: value }));
 
   const massAndPrice = useMemo(() => {
     if (!product) return { mass: 0, cuttingPrice: 0, totalPrice: 0 };

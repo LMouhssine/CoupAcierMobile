@@ -6,15 +6,15 @@ const App = () => {
   const navigation = useNavigation();
 
   const navigateToProRegistration = () => {
-    navigation.navigate('RegistrationScreenPro');
+    navigation.navigate('RegistrationScreenPro' as never);
   };
 
   const navigateToParticularRegistration = () => {
-    navigation.navigate('RegistrationScreenPart');
+    navigation.navigate('RegistrationScreenPart' as never);
   };
 
   const navigateToIndex = () => {
-    navigation.navigate('index');
+    navigation.navigate('index' as never);
   };
 
   return (

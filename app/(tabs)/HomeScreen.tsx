@@ -5,7 +5,7 @@ import { ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,7 +27,7 @@ const HomeScreen: React.FC = () => {
         setProducts(data.data); 
       } catch (error) {
         console.error('Fetch error:', error);
-        Alert.alert('Erreur', error.message);
+        Alert.alert('Erreur', (error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -36,7 +36,7 @@ const HomeScreen: React.FC = () => {
     fetchProducts();
   }, []);
 
-  const handleProductPress = (productId) => {
+  const handleProductPress = (productId: string) => {
     navigation.navigate('ProductPage', { id: productId });
   };
 
@@ -55,7 +55,7 @@ const HomeScreen: React.FC = () => {
           placeholder="Rechercher un produit"
           placeholderTextColor="#888"
           value={searchTerm}
-          onChangeText={text => setSearchTerm(text)}
+          onChangeText={(text: string) => setSearchTerm(text)}
         />
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <BellIconContainer>

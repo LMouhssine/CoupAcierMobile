@@ -29,18 +29,19 @@ const LoginScreen = () => {
         Alert.alert(
           'Succès',
           'Connexion réussie',
-          [{ text: 'OK', onPress: () => navigation.navigate('ProfileScreen') }]
+          [{ text: 'OK', onPress: () => navigation.navigate('ProfileScreen' as never) }]
         );
       } else {
         Alert.alert('Erreur', 'Email ou mot de passe incorrect');
       }
     } catch (error) {
-      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
+      const errorMessage = (error as Error).message;
+      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${errorMessage}`);
     }
   };
 
   const handleSignUp = () => {
-    navigation.navigate('TypeScreen');
+    navigation.navigate('TypeScreen' as never);
   };
 
   return (
@@ -51,7 +52,7 @@ const LoginScreen = () => {
           type="material"
           size={28}
           color="#000"
-          onPress={() => navigation.navigate('index')}
+          onPress={() => navigation.navigate('index' as never)}
         />
         <Text style={styles.title}>Connexion</Text>
       </View>

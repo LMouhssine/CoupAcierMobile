@@ -3,8 +3,8 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react-nativ
 import ProductPage from '../app/(tabs)/ProductPage';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { geocodeAddress } from '../backend/utils/geocoding';
-import { calculateDistanceToClient, calculateTotalCost } from '../backend/utils/costCalculations';
+import { geocodeAddress } from '../utils/geocoding';
+import { calculateDistanceToClient, calculateTotalCost } from '../utils/costCalculations';
 
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
@@ -15,11 +15,11 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
 }));
 
-jest.mock('../../backend/utils/geocoding', () => ({
+jest.mock('../utils/geocoding', () => ({
   geocodeAddress: jest.fn(),
 }));
 
-jest.mock('../../backend/utils/costCalculations', () => ({
+jest.mock('../utils/costCalculations', () => ({
   calculateDistanceToClient: jest.fn(),
   calculateTotalCost: jest.fn(),
 }));
@@ -29,9 +29,9 @@ describe('ProductPage', () => {
   const route = { params: { id: 10 } };
 
   beforeEach(() => {
-    useNavigation.mockReturnValue(navigation);
-    useRoute.mockReturnValue(route);
-    AsyncStorage.getItem.mockResolvedValue(null);
+    (useNavigation as jest.Mock).mockReturnValue(navigation);
+    (useRoute as jest.Mock).mockReturnValue(route);
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
   });
 
   it('renders loading indicator when product is loading', () => {
@@ -57,12 +57,10 @@ describe('ProductPage', () => {
       tva: 10,
     };
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ data: product }),
-      })
-    );
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ data: product }),
+    });
 
     const { getByText } = render(<ProductPage />);
     
@@ -76,9 +74,12 @@ describe('ProductPage', () => {
   });
 
   it('calculates and displays shipping cost', async () => {
-    geocodeAddress.mockResolvedValue({ lat: 48.8566, lng: 2.3522 });
-    calculateDistanceToClient.mockResolvedValue({ distance: 15, warehouse: { name: 'Paris' } });
-    calculateTotalCost.mockReturnValue({ costHT: 10, totalCost: 12, tax: 2 });
+    (geocodeAddress as jest.Mock).mockResolvedValue({ lat: 48.8566, lng: 2.3522 });
+    (calculateDistanceToClient as jest.Mock).mockResolvedValue({ distance: 15, warehouse: { name: 'Paris' } });
+    jest.mock('../utils/costCalculations', () => ({
+      calculateDistanceToClient: jest.fn(),
+      calculateTotalCost: jest.fn().mockReturnValue({ costHT: 10, totalCost: 12, tax: 2 }),
+    }));
 
     const { getByPlaceholderText, getByText } = render(<ProductPage />);
 
@@ -106,7 +107,4 @@ describe('ProductPage', () => {
       );
     });
   });
-
-  // - Test du calcul de la masse et du prix
-  // - Test de la navigation lors de l'achat
 });

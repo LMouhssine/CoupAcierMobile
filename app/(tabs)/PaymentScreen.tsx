@@ -13,7 +13,7 @@ const generateUniqueReference = () => {
 const PaymentScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { productInfo } = route.params || {};
+  const { productInfo }: { productInfo?: any } = route.params || {};
 
   const [totalAmount, setTotalAmount] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -91,15 +91,16 @@ const PaymentScreen = () => {
 
       if (response.ok) {
         // Sauvegarder la commande dans AsyncStorage
-        let orders = await AsyncStorage.getItem('orders');
-        orders = orders ? JSON.parse(orders) : [];
+        const storedOrders = await AsyncStorage.getItem('orders');
+        let orders: any[] = storedOrders ? JSON.parse(storedOrders) : [];
+        orders = orders ? JSON.parse(JSON.stringify(orders)) : [];
         orders.push(order);
         await AsyncStorage.setItem('orders', JSON.stringify(orders));
 
         Alert.alert(
           'Paiement réussi',
           'Votre paiement a été traité avec succès.',
-          [{ text: 'OK', onPress: () => navigation.navigate('OrdersScreen') }]
+          [{ text: 'OK', onPress: () => navigation.navigate('OrdersScreen' as never) }]
         );
       } else {
         // Log pour vérifier le message d'erreur renvoyé par l'API

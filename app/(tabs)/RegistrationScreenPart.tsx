@@ -50,7 +50,7 @@ const RegistrationScreenPart = () => {
         Alert.alert('Erreur', `Une erreur est survenue lors de l'enregistrement du client: ${errorData.message}`);
       }
     } catch (error) {
-      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${error.message}`);
+      Alert.alert('Erreur', `Impossible de se connecter au serveur: ${(error as Error).message}`);
     }
   };
 
@@ -62,7 +62,7 @@ const RegistrationScreenPart = () => {
           type="material"
           size={28}
           color="#000"
-          onPress={() => navigation.navigate('TypeScreen')}
+          onPress={() => navigation.navigate('TypeScreen' as never)}
         />
         <Text style={styles.title}>Inscription Particulier</Text>
       </View>

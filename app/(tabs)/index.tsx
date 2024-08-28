@@ -3,8 +3,16 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, StatusBar } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type RootStackParamList = {
+  HomeScreen: undefined;
+  Login: undefined;
+  TypeScreen: undefined;
+};
+
 const App = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -37,7 +45,7 @@ const App = () => {
       <View style={styles.logoContainer}>
         <Image source={require('@/assets/images/CoupAcierApp.png')} style={styles.logoImage} />
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TypeScreen')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TypeScreen' as never)}>
         <Text style={styles.buttonText}>Je m'inscris</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>

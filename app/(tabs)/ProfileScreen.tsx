@@ -64,11 +64,11 @@ const ProfileScreen: React.FC = () => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('accessToken');
     await AsyncStorage.removeItem('userId');
-    navigation.navigate('Login'); // Navigate to the login screen
+    navigation.navigate('Login' as never); // Navigate to the login screen
   };
 
   const handleSignUp = () => {
-    navigation.navigate('TypeScreen');
+    navigation.navigate('TypeScreen' as never);
   };
 
   if (isLoading) {
@@ -86,7 +86,7 @@ const ProfileScreen: React.FC = () => {
         <Image source={notLoggedInImage} style={styles.notLoggedInImage} />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('Login' as never)}
         >
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>

@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Order {
-  idCommande: number; // Assurez-vous que idCommande est de type nombre
+  idCommande: number;
   dateCommande: string;
   statusCommande: string;
   type: string;
@@ -46,7 +46,7 @@ const OrdersScreen = () => {
         Alert.alert('Erreur', `Erreur lors de la récupération des commandes: ${errorData.message}`);
       }
     } catch (error) {
-      Alert.alert('Erreur', `Erreur de connexion au serveur: ${error.message}`);
+      Alert.alert('Erreur', `Erreur de connexion au serveur: ${(error as Error).message}`);
     } finally {
       setIsLoading(false);
     }
