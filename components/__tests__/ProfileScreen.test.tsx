@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import ProfileScreen from '../app/(tabs)/ProfileScreen';
+import ProfileScreen from '../../app/(tabs)/ProfileScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('@react-navigation/native', () => ({

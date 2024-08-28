@@ -1,7 +1,6 @@
-// backend/utils/geocoding.js
 import axios from 'axios';
 
-const API_KEY = ''; // Clé API OpenCage
+const API_KEY = 'adf3a2c9c6cf4d67a6b4b838d1d807ef'; // Clé API OpenCage
 
 export const geocodeAddress = async (address) => {
   try {
