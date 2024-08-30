@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = '5b3ce3597851110001cf6248f2c791a7808946bea01663c249efb2d7'; // Clé API OpenRouteService
+const API_KEY = ''; // Clé API OpenRouteService
 
 export const getDistance = async (start, end) => {
   try {
