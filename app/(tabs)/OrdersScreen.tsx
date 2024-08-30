@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -70,7 +70,10 @@ const OrdersScreen = () => {
   if (orders.length === 0) {
     return (
       <View style={styles.container}>
+      <View style={styles.centerContainer}>
         <Text style={styles.noOrdersText}>Aucune commande trouvée.</Text>
+        <Image source={require('../../assets/images/order.png')} style={styles.noOrdersImage} />
+      </View>
       </View>
     );
   }
@@ -115,10 +118,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   noOrdersText: {
-    fontSize: 20,
+    fontSize: 24,
+    fontStyle: 'italic',
     color: '#333',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 160,
+    marginBottom: 20,
   },
   orderContainer: {
     backgroundColor: '#FFFFFF',
@@ -131,6 +136,12 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
+  noOrdersImage: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
+    marginBottom: 30,
+  },
   orderItem: {
     fontSize: 16,
     fontStyle: 'italic',
@@ -139,6 +150,10 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
+  },
+  centerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

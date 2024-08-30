@@ -11,10 +11,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const userRoutes = require('./backend/routes/userRoutes');
-
-app.use('/users', userRoutes);
-
 // Logs pour vérifier les valeurs des variables d'environnement
 console.log('DB_HOST:', process.env.DB_HOST);
 console.log('DB_USER:', process.env.DB_USER);

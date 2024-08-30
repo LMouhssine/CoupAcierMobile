@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -47,13 +46,6 @@ const LoginScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Icon
-          name="arrow-back"
-          type="material"
-          size={28}
-          color="#000"
-          onPress={() => navigation.navigate('index' as never)}
-        />
         <Text style={styles.title}>Connexion</Text>
       </View>
       <View style={styles.formContainer}>
@@ -83,6 +75,9 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonText}>Créer un compte</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('index' as never)}>
+          <Text style={styles.backLink}>Retour à la section</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -96,17 +91,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
-    paddingHorizontal: 10,
     marginTop: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    marginLeft: 10,
   },
   formContainer: {
     backgroundColor: '#f0f0f0',
@@ -143,6 +135,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  backLink: {
+    marginTop: 10,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
 });
 

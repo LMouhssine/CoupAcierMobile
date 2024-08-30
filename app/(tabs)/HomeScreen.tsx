@@ -79,7 +79,14 @@ const HomeScreen: React.FC = () => {
                 <Product key={product.idProduit}>
                   <TouchableOpacity onPress={() => handleProductPress(product.idProduit)}>
                     <ProductImageContainer>
-                      <ProductImage source={{ uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}` }} />
+                      <ProductImage 
+                        source={{ 
+                          uri: `http://127.0.0.1:5006/public/${product.imagePrincipale}`,
+                          cache: 'force-cache' 
+                        }} 
+                        onError={() => Alert.alert('Erreur', 'Impossible de charger l\'image.')}
+                        style={{ width: 170, height: 170 }}
+                      />
                     </ProductImageContainer>
                     <ProductNameContainer>
                       <ProductName>{product.nomProduit}</ProductName>
@@ -119,16 +126,16 @@ const SearchBar = styled.TextInput`
   flex: 1;
   height: 40px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  padding-left: 10px;
+  border-radius: 20px;
+  padding-left: 15px;
   margin-right: 10px;
   background-color: #fff;
 `;
 
 const BellIconContainer = styled.View`
-  width: 45px;
-  height: 45px;
-  border: 1.5px solid #000;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #000;
   background-color: #FEE715;
   border-radius: 22.5px;
   justify-content: center;
@@ -136,8 +143,8 @@ const BellIconContainer = styled.View`
 `;
 
 const BellIcon = styled.Image`
-  width: 27px;
-  height: 27px;
+  width: 26px;
+  height: 26px;
 `;
 
 const Banner = styled.View`
@@ -150,14 +157,14 @@ const BannerImage = styled(ImageBackground)`
   height: 200px;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
 `;
 
 const BannerText = styled.View`
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
 `;
 
 const Tagline = styled.Text`
@@ -175,13 +182,14 @@ const HighlightedTagline = styled.Text`
   font-size: 20px;
   color: #000;
   background-color: #FEE715;
-  padding: 2px;
+  padding: 2px 5px;
   margin-top: 5px;
+  border-radius: 5px;
 `;
 
 const ProductListContainer = styled.View`
   flex: 1;
-  padding: 10px;
+  padding: 15px;
 `;
 
 const ProductList = styled.View`
@@ -193,42 +201,39 @@ const ProductList = styled.View`
 const Product = styled.View`
   width: 48%;
   margin-bottom: 20px;
-  align-items: center;
-  background-color: #ccc;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 0px;
   shadow-color: #000;
-  shadow-offset: 0px 4px;
-  shadow-opacity: 0.1;
-  shadow-radius: 4px;
-  elevation: 2;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.15;
+  shadow-radius: 6px;
+  elevation: 3;
+  overflow: hidden;
 `;
 
 const ProductImageContainer = styled.View`
-  width: 180px;
-  height: 160px;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100%;
+  height: 170px;
+  border-radius: 10px 10px 0 0;
   background-color: #f0f0f0;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 `;
 
 const ProductImage = styled.Image`
   width: 100%;
   height: 100%;
   resize-mode: cover;
+  background-color: transparent;
 `;
 
 const ProductNameContainer = styled.View`
   background-color: #FEE715;
   width: 100%;
-  min-width: 180px;
-  border: 1px solid #000;
-  padding: 5px;
-  border-radius: 4px;
+  padding: 10px;
   align-items: center;
 `;
 
@@ -236,10 +241,7 @@ const ProductName = styled.Text`
   font-size: 16px;
   font-weight: bold;
   text-align: center;
-  max-width: 100%;
-  flex-shrink: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #000;
 `;
 
 const NoProductsText = styled.Text`
@@ -247,6 +249,7 @@ const NoProductsText = styled.Text`
   font-weight: bold;
   text-align: center;
   margin-top: 20px;
+  color: #888;
 `;
 
 export default HomeScreen;
