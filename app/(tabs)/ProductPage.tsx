@@ -174,8 +174,8 @@ const ProductPage = () => {
         <Text style={styles.title}>{product.nomProduit}</Text>
         <Text style={styles.price}>{massAndPrice.totalPrice ? `${massAndPrice.totalPrice.toFixed(2)} €` : `${product.prixMetre}€`}</Text>
         <Text style={styles.description}>{product.description}</Text>
-        <Text style={styles.details}>Hauteur : {product.hauteur} cm</Text>
-        <Text style={styles.details}>Épaisseur : {product.epaisseur} cm</Text>
+        <Text style={styles.details}>Hauteur : {product.hauteur} mm</Text>
+        <Text style={styles.details}>Épaisseur : {product.epaisseur} mm</Text>
         <Text style={styles.details}>Masse Linéaire : {product.masseLineaire} kg/m</Text>
         <Text style={styles.details}>Référence : {product.referenceProduit}</Text>
         <View style={styles.quantityContainer}>

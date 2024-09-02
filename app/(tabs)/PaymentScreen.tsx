@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Alert, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, Button, Alert, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -51,28 +51,23 @@ const PaymentScreen = () => {
       // Simulation du traitement de paiement
       await new Promise(resolve => setTimeout(resolve, 3000));
 
-      // Format de date correct pour MySQL (YYYY-MM-DD HH:MM:SS)
       const dateLivraison = new Date().toISOString().split('T').join(' ').split('.')[0];
 
-      // Générer une référence unique
       const uniqueReference = generateUniqueReference();
 
-      // Enregistrer les détails de la commande après un paiement réussi
       const order = {
-        statusCommande: 'En attente', // Utilisez une valeur valide de l'énumération
-        devis: false, // Ajoutez une valeur pour 'devis'
-        type: 'Commande', // Assurez-vous de fournir une valeur valide pour 'type'
-        dateLivraison, // Date correctement formatée
-        referenceLivraison: 'REF12345', // Exemple de valeur pour la référence de livraison
-        ModeReception: 'A LIVRER', // Exemple de valeur pour le mode de réception
-        reference: uniqueReference, // Utiliser la référence unique générée
+        statusCommande: 'En attente',
+        devis: false,
+        type: 'Commande',
+        dateLivraison,
+        referenceLivraison: 'REF12345',
+        ModeReception: 'A LIVRER',
+        reference: uniqueReference,
         idClient: await AsyncStorage.getItem('userId'),
         total: totalAmount,
         cardHolderName,
-        productId: productInfo.productId, // Ajouter l'ID du produit
+        productId: productInfo.productId,
       };
-
-      console.log('Détails de la commande:', order); // Log des détails de la commande avant l'envoi
 
       const token = await AsyncStorage.getItem('accessToken');
       const response = await fetch('http://127.0.0.1:5006/orders', {
@@ -81,19 +76,14 @@ const PaymentScreen = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(order)
+        body: JSON.stringify(order),
       });
 
-      console.log('Réponse brute de l\'API:', response); // Log pour vérifier la réponse brute de l'API
-
       const result = await response.json();
-      console.log('Résultat de la réponse:', result); // Log des données de la réponse
 
       if (response.ok) {
-        // Sauvegarder la commande dans AsyncStorage
         const storedOrders = await AsyncStorage.getItem('orders');
-        let orders: any[] = storedOrders ? JSON.parse(storedOrders) : [];
-        orders = orders ? JSON.parse(JSON.stringify(orders)) : [];
+        let orders = storedOrders ? JSON.parse(storedOrders) : [];
         orders.push(order);
         await AsyncStorage.setItem('orders', JSON.stringify(orders));
 
@@ -103,18 +93,12 @@ const PaymentScreen = () => {
           [{ text: 'OK', onPress: () => navigation.navigate('OrdersScreen' as never) }]
         );
       } else {
-        // Log pour vérifier le message d'erreur renvoyé par l'API
-        console.error('Erreur dans la réponse de l\'API:', result.message);
         Alert.alert('Erreur', `Erreur lors du paiement: ${result.message}`);
       }
-
     } catch (error) {
-      // Log pour capturer les erreurs dans le bloc try
-      console.error('Erreur lors du paiement:', error);
       Alert.alert('Erreur', 'Le paiement a échoué. Veuillez réessayer.');
     } finally {
       setIsProcessing(false);
-      console.log('Fin du traitement du paiement');
     }
   };
 
@@ -129,10 +113,8 @@ const PaymentScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Paiement</Text>
-      </View>
-
+      <Text style={styles.headerTitle}>Paiement</Text>
+      
       <View style={styles.summaryContainer}>
         <Text style={styles.summaryText}>Montant total à payer : {totalAmount ? `${totalAmount} €` : 'Calcul en cours...'}</Text>
       </View>
@@ -142,6 +124,7 @@ const PaymentScreen = () => {
         value={cardHolderName}
         onChangeText={setCardHolderName}
         style={styles.input}
+        placeholderTextColor="#999"
       />
       <TextInput
         placeholder="Numéro de carte"
@@ -149,6 +132,7 @@ const PaymentScreen = () => {
         onChangeText={setCardNumber}
         keyboardType="numeric"
         style={styles.input}
+        placeholderTextColor="#999"
       />
       <View style={styles.cardDetailsContainer}>
         <TextInput
@@ -157,6 +141,7 @@ const PaymentScreen = () => {
           onChangeText={setExpiryDate}
           keyboardType="numeric"
           style={[styles.input, styles.smallInput]}
+          placeholderTextColor="#999"
         />
         <TextInput
           placeholder="CVV"
@@ -165,10 +150,17 @@ const PaymentScreen = () => {
           keyboardType="numeric"
           secureTextEntry
           style={[styles.input, styles.smallInput]}
+          placeholderTextColor="#999"
         />
       </View>
 
-      <Button title="Payer maintenant" onPress={handlePayment} disabled={!totalAmount || isProcessing} />
+      <TouchableOpacity 
+        style={[styles.payButton, !totalAmount || isProcessing ? styles.payButtonDisabled : null]} 
+        onPress={handlePayment} 
+        disabled={!totalAmount || isProcessing}
+      >
+        <Text style={styles.payButtonText}>Payer maintenant</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -177,32 +169,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 60,
-    backgroundColor: '#FFF',
-    padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: '#f8f8f8',
+    padding: 20,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginLeft: 10,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#333',
   },
   summaryContainer: {
-    marginBottom: 20,
+    marginBottom: 30,
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   summaryText: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    borderColor: '#ddd',
+    padding: 12,
+    marginBottom: 15,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    fontSize: 16,
+    color: '#333',
   },
   cardDetailsContainer: {
     flexDirection: 'row',
@@ -212,15 +214,30 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
   },
+  payButton: {
+    backgroundColor: '#28a745',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  payButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  payButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#f8f8f8',
   },
   processingText: {
     marginTop: 10,
     fontSize: 16,
+    color: '#333',
   },
 });
 
